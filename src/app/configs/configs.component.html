@@ -1,7 +1,7 @@
 Configs:
 <ul>
   <li *ngFor="let config of configs">
-    <a routerLink="/config/{{config.name}}">{{config.name}}</a>
+    <a routerLink="/config/{{config.name}}">{{config.displayName()}}</a>
     
   </li>
 </ul>

@@ -33,4 +33,10 @@ export class ConfigEditorComponent implements OnInit {
     this.configService.deleteConfig(this.originalConfigName);
     this.router.navigate(['']);
   }
+
+  save() {
+    console.log('test1', this.config);
+    this.configService.updateConfig(this.originalConfigName, this.config);
+    this.router.navigate(['']);    
+  }
 }
