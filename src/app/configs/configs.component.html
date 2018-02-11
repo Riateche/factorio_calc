@@ -1,0 +1,8 @@
+Configs:
+<ul>
+  <li *ngFor="let config of configs">
+    <a routerLink="/config/{{config.name}}">{{config.name}}</a>
+    
+  </li>
+</ul>
+<button (click)="addConfig()">Add config</button>
