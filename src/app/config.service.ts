@@ -27,8 +27,14 @@ export class ConfigService {
     return this.m_allConfigs.find(c => c.name == name);
   }
 
+  deleteConfig(name: string) {
+    this.m_allConfigs = this.m_allConfigs.filter(c => c.name != name);
+    this.save();    
+  }
+
   private save() {
     //...
   }
+
 
 }

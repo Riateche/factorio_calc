@@ -7,7 +7,7 @@ import { ConfigsComponent } from './configs/configs.component';
 import { AppRoutingModule } from './/app-routing.module';
 import { ConfigEditorComponent } from './config-editor/config-editor.component';
 import { ConfigService } from './config.service';
-
+import { FormsModule } from '@angular/forms';
 
 @NgModule({
   declarations: [
@@ -17,6 +17,7 @@ import { ConfigService } from './config.service';
   ],
   imports: [
     BrowserModule,
+    FormsModule,
     AppRoutingModule
   ],
   providers: [ConfigService],

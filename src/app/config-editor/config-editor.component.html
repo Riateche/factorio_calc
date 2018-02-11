@@ -1,3 +1,30 @@
-<p>
-  config-editor works!
-</p>
+Editing config
+
+<button (click)="save()">Save</button>
+<button routerLink="/">Cancel</button>
+<button (click)="deleteConfig()">Delete config</button>
+
+<div *ngIf="config">
+  <table>
+    <tr>
+      <td>Name</td>
+      <td>
+        <input [(ngModel)]="config.name">
+      </td>
+    </tr>
+    <tr>
+        <td>Title</td>
+        <td>
+          <input [(ngModel)]="config.title">
+        </td>  
+    </tr>
+
+
+
+  </table>
+
+
+
+
+
+</div>
