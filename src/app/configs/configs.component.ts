@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import {Config } from '../config';
+import { ConfigService } from '../config.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'configs',
@@ -9,15 +11,13 @@ import {Config } from '../config';
 export class ConfigsComponent implements OnInit {
   configs: Array<Config>
 
-  constructor() { 
-    this.configs = [new Config("config1"), new Config("config2"), new Config("config3")];
-    console.log(this.configs);
-
-
+  constructor(private configService: ConfigService, private router: Router) { 
+    this.configs = this.configService.allConfigs();
   }
 
   addConfig() {
-    
+    var config = this.configService.newConfig();
+    this.router.navigate(['config', config.name]);
   }
 
   ngOnInit() {

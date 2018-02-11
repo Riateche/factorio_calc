@@ -6,6 +6,7 @@ import { AppComponent } from './app.component';
 import { ConfigsComponent } from './configs/configs.component';
 import { AppRoutingModule } from './/app-routing.module';
 import { ConfigEditorComponent } from './config-editor/config-editor.component';
+import { ConfigService } from './config.service';
 
 
 @NgModule({
@@ -18,7 +19,7 @@ import { ConfigEditorComponent } from './config-editor/config-editor.component';
     BrowserModule,
     AppRoutingModule
   ],
-  providers: [],
+  providers: [ConfigService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
