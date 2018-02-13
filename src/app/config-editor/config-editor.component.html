@@ -1,7 +1,7 @@
 Editing config
 
 <button (click)="save()">Save</button>
-<button routerLink="/">Cancel</button>
+<button [routerLink]="routes.configs()">Cancel</button>
 <button (click)="deleteConfig()">Delete config</button>
 
 <div *ngIf="config">
@@ -16,7 +16,7 @@ Editing config
         <td>Title</td>
         <td>
           <input [(ngModel)]="config.title">
-        </td>  
+        </td>
     </tr>
 
 

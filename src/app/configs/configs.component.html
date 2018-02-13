@@ -3,7 +3,7 @@
     <p class="panel-heading">
       Configs
     </p>
-    <a *ngFor="let config of configs" routerLink="/config/{{config.name}}" class="panel-block">
+    <a *ngFor="let config of configs" [routerLink]="routes.config(config)" class="panel-block">
       {{config.displayName()}}
     </a>
 
@@ -14,3 +14,4 @@
     </div>
   </nav>
 </div>
+
