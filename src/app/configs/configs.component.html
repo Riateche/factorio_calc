@@ -1,8 +1,16 @@
-Configs:
-<ul>
-  <li *ngFor="let config of configs">
-    <a routerLink="/config/{{config.name}}">{{config.displayName()}}</a>
-    
-  </li>
-</ul>
-<button (click)="addConfig()">Add config</button>
+<div class="container">
+  <nav class="panel">
+    <p class="panel-heading">
+      Configs
+    </p>
+    <a *ngFor="let config of configs" routerLink="/config/{{config.name}}" class="panel-block">
+      {{config.displayName()}}
+    </a>
+
+
+    <div class="panel-block">
+      <button class="button is-primary" (click)="addConfig()">Add config</button>
+
+    </div>
+  </nav>
+</div>
