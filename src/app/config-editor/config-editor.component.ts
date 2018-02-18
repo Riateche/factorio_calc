@@ -16,7 +16,6 @@ export class ConfigEditorComponent implements OnInit {
   constructor(private route: ActivatedRoute, private configService: ConfigService, private router: Router, private routes: RouteService) { }
 
   ngOnInit() {
-    console.log(this.route.snapshot.paramMap);
     this.originalConfigName = this.route.snapshot.paramMap.get("name");
     var config = this.configService.configByName(this.originalConfigName);
     if (!config) {
