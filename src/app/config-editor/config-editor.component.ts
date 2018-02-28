@@ -2,7 +2,9 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ConfigService } from '../config.service';
 import { Config } from '../config';
+
 import { RouteService } from '../route.service';
+import { Machine } from '../machine';
 
 @Component({
   selector: 'app-config-editor',
@@ -38,5 +40,9 @@ export class ConfigEditorComponent implements OnInit {
     console.log('test1', this.config);
     this.configService.updateConfig(this.originalConfigName, this.config);
     this.router.navigate([this.routes.configs()]);
+  }
+
+  addMachine() {
+    this.config.machines.push(new Machine());
   }
 }

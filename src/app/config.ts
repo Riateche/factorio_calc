@@ -1,6 +1,9 @@
+import { Machine } from './machine';
+
 export class Config {
-  name: string;
+  name: string = "";
   title: string = "";
+  machines: Array<Machine> = [];
 
   constructor(name?: string) {
     this.name = name;
@@ -9,11 +12,15 @@ export class Config {
   clone() : Config {
     var r = new Config(this.name);
     r.title = this.title;
+    r.machines = this.machines.map(m => m.clone());
     return r;
   }
 
-  static fromJson(json: string) : Config {
-    return Object.assign(new Config(), json);
+  static fromJson(data: any) : Config {
+    var r = new Config(data.name);
+    r.title = data.title;
+    r.machines = data.machines.map(m => Machine.fromJson(m));
+    return r;
   }
 
   displayName() : string {

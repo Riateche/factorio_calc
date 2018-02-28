@@ -8,12 +8,14 @@ import { AppRoutingModule } from './/app-routing.module';
 import { ConfigEditorComponent } from './config-editor/config-editor.component';
 import { ConfigService } from './config.service';
 import { FormsModule } from '@angular/forms';
+import { MachineEditorComponent } from './machine-editor/machine-editor.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     ConfigsComponent,
-    ConfigEditorComponent
+    ConfigEditorComponent,
+    MachineEditorComponent
   ],
   imports: [
     BrowserModule,
