@@ -1,30 +1,49 @@
-Editing config
-
-<button (click)="save()">Save</button>
-<button [routerLink]="routes.configs()">Cancel</button>
-<button (click)="deleteConfig()">Delete config</button>
-
-<div *ngIf="config">
-  <table>
-    <tr>
-      <td>Name</td>
-      <td>
-        <input [(ngModel)]="config.name">
-      </td>
-    </tr>
-    <tr>
-        <td>Title</td>
-        <td>
-          <input [(ngModel)]="config.title">
-        </td>
-    </tr>
 
 
+<div *ngIf="config" class="container">
 
-  </table>
+  <h1 class="title">Editing config</h1>
+
+  <div class="field is-horizontal">
+    <div class="field-label is-normal">
+      <label class="label">Name</label>
+    </div>
+    <div class="field-body">
+      <div class="field">
+        <div class="control">
+          <input class="input" type="text"  [(ngModel)]="config.name">
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="field is-horizontal">
+      <div class="field-label is-normal">
+        <label class="label">Title</label>
+      </div>
+      <div class="field-body">
+        <div class="field">
+          <div class="control">
+            <input class="input" type="text"  [(ngModel)]="config.title">
+          </div>
+        </div>
+      </div>
+    </div>
 
 
 
+
+  <div class="field is-grouped">
+    <p class="control">
+      <button class="button is-primary" (click)="save()">Save</button>
+    </p>
+    <p class="control">
+      <button class="button" [routerLink]="routes.configs()">Cancel</button>
+    </p>
+    <p class="control">
+        <button class="button is-danger is-outlined" (click)="deleteConfig()">Delete config</button>
+    </p>
+  </div>
 
 
 </div>

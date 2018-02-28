@@ -61,7 +61,7 @@ describe('ConfigsComponent', () => {
     expect(nativeElement.querySelector("a[href=\"/config/name1\"]").textContent).toContain("Title 1");
     expect(nativeElement.querySelector("a[href=\"/config/name2\"]").textContent).toContain("name2");
     expect(nativeElement.querySelector("a[href=\"/config/name3\"]").textContent).toContain("Title 3");
-  }
+  }));
 
 
   // it('should render title in a h1 tag', async(() => {
