@@ -6,11 +6,8 @@
     <a *ngFor="let config of configs" [routerLink]="routes.config(config)" class="panel-block">
       {{config.displayName()}}
     </a>
-
-
     <div class="panel-block">
       <button class="button is-primary" (click)="addConfig()">Add config</button>
-
     </div>
   </nav>
 </div>

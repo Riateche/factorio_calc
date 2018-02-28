@@ -11,6 +11,7 @@ import { FormsModule } from '@angular/forms';
 import { MachineEditorComponent } from './machine-editor/machine-editor.component';
 import { SortablejsModule } from 'angular-sortablejs';
 import { TempComponent } from './temp/temp.component';
+import { DropdownComponent } from './dropdown/dropdown.component';
 
 @NgModule({
   declarations: [
@@ -18,7 +19,8 @@ import { TempComponent } from './temp/temp.component';
     ConfigsComponent,
     ConfigEditorComponent,
     MachineEditorComponent,
-    TempComponent
+    TempComponent,
+    DropdownComponent
   ],
   imports: [
     BrowserModule,

@@ -2,7 +2,9 @@
   <div class="column sortableHandle">↕</div>
   <div class="column">
     Type:
-    <input [(ngModel)]="machine.type">
+    <!-- <input [(ngModel)]="machine.type"> -->
+
+    <dropdown [options]="allTypes()"></dropdown>
   </div>
   <div class="column">
     {{machine.test1()}}
