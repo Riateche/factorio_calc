@@ -1,6 +1,6 @@
 
 
-<div *ngIf="config" class="container">
+<div *ngIf="config" class="root">
 
   <h1 class="title">Editing config</h1>
 
@@ -32,7 +32,11 @@
 
   <h2 class="title is-4">Machines:</h2>
 
-  <machine-editor *ngFor="let machine of config.machines" [machine]="machine"></machine-editor>
+  <div [sortablejs]="config.machines">
+      <div *ngFor="let machine of config.machines" class="machineContainer">
+        <machine-editor [machine]="machine" (onDeleteRequested)="deleteMachine(machine)"></machine-editor>
+      </div>
+    </div>
 
   <div class="field is-grouped">
     <p class="control">

@@ -45,4 +45,8 @@ export class ConfigEditorComponent implements OnInit {
   addMachine() {
     this.config.machines.push(new Machine());
   }
+  deleteMachine(machine: Machine) {
+    if (!confirm("Delete this machine?")) { return; }
+    this.config.machines.splice(this.config.machines.indexOf(machine), 1);
+  }
 }

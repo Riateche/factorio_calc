@@ -1,5 +1,15 @@
-<div class="box">
-  Type:
-  <input [(ngModel)]="machine.type">
-  {{machine.test1()}}
+<div class="box columns">
+  <div class="column sortableHandle">↕</div>
+  <div class="column">
+    Type:
+    <input [(ngModel)]="machine.type">
+  </div>
+  <div class="column">
+    {{machine.test1()}}
+  </div>
+  <div class="column deleteColumn">
+    <a class="delete is-medium" title="Remove machine" (click)="onDeleteRequested.emit()"></a>
+  </div>
+
 </div>
+

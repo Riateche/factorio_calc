@@ -1,0 +1,18 @@
+.sortableHandle {
+  font-size: 130%;
+  cursor: ns-resize;
+  flex-basis: 20px;
+  flex-grow: 0;
+}
+.deleteColumn {
+  flex-basis: 20px;
+  flex-grow: 0;
+}
+.delete {
+  background-color: #FF8AA2;
+}
+
+.delete:hover {
+  background-color: #ff3860;
+}
+
