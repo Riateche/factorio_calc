@@ -1,6 +1,6 @@
 
 <span *ngIf="!is_active">
-  <button class="button" (click)="setActive(true)">
+  <button class="button" (click)="openEditor()">
     <span class="icon" *ngIf="currentIcon().length > 0">
         <img [src]="currentIcon()">
     </span>
@@ -9,7 +9,7 @@
 </span>
 <div class="dropdown is-active" *ngIf="is_active">
   <div class="dropdown-trigger">
-    <input #input [(ngModel)]="value" class="input" type="search" (focusout)="setActive(false)" (keyup.enter)="setActive(false)">
+    <input #input [(ngModel)]="currentText" class="input" type="search" (keyup)="inputKeyUp($event)" (focusout)="cancel()">
   </div>
   <div class="dropdown-menu" id="dropdown-menu" role="menu">
     <div class="dropdown-content" *ngIf="visibleOptions().length > 0">

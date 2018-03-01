@@ -32,6 +32,7 @@ export class DropdownComponent implements OnInit {
   is_active = false;
   @Input() value: string = "";
   @Output() valueChange: EventEmitter<String> = new EventEmitter<String>();
+  currentText: string = "";
 
 
 
@@ -41,32 +42,45 @@ export class DropdownComponent implements OnInit {
   ngOnInit() {
   }
 
-  toggleActive() {
-    this.is_active = !this.is_active;
+  openEditor() {
+    this.is_active = true;
+    this.currentText = "";
+    setTimeout(() => this.inputElement.nativeElement.focus(), 100);
   }
-  setActive(value: boolean) {
-    this.is_active = value;
-    if (value) {
-      setTimeout(() => this.inputElement.nativeElement.focus(), 100);
+
+  cancel() {
+    this.is_active = false;
+    this.currentText = "";
+  }
+
+  confirm() {
+    if (this.currentText.length === 0) {
+      this.value = "";
+    } else {
+      let option = this.options.find(option => option.value.indexOf(this.currentText) !== -1);
+      if (option) {
+        this.value = option.value;
+      } else {
+        this.value = this.currentText;
+      }
     }
     this.valueChange.emit(this.value);
-
-    //this.is_active = true;
+    this.cancel();
   }
+
   setCurrentOption(option: DropdownOption) {
     if (option.is_separator || option.is_title) { return; }
     this.value = option.value;
     this.valueChange.emit(this.value);
-
+    this.cancel();
   }
 
   visibleOptions(): Array<DropdownOption> {
-
-    if (!this.options.find(option => option.value.indexOf(this.value) !== -1 && !option.is_title)) {
+    if (!this.options.find(option => option.value.indexOf(this.currentText) !== -1 && !option.is_title)) {
       return [];
     }
     return this.options.filter(
-      option => option.is_separator || option.is_title || option.value.indexOf(this.value) !== -1);
+      option => option.is_separator || option.is_title || option.value.indexOf(this.currentText) !== -1);
   }
   currentIcon() : string {
     let option = this.options.find(option => option.value == this.value);
@@ -74,6 +88,15 @@ export class DropdownComponent implements OnInit {
       return option.icon;
     } else {
       return "";
+    }
+  }
+  inputKeyUp(event) {
+    if (event.key == "Escape") {
+      this.cancel();
+    } else if (event.key == "Enter") {
+      this.confirm();
+    } else if (event.key == "ArrowDown") {
+      //...
     }
   }
 }
