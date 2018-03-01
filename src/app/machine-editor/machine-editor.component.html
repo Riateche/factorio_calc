@@ -4,7 +4,7 @@
     Type:
     <!-- <input [(ngModel)]="machine.type"> -->
 
-    <dropdown [options]="allTypes()"></dropdown>
+    <dropdown [options]="allTypes" [(value)]="machine.type"></dropdown>
   </div>
   <div class="column">
     {{machine.test1()}}

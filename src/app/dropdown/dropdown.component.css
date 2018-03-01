@@ -4,3 +4,12 @@
 .button, .dropdown {
   vertical-align: middle;
 }
+.dropdown-content {
+  max-height: 500px;
+  overflow-y: scroll;
+}
+.dropdown-title {
+  color: #888;
+  font-weight: bold;
+  text-align: center;
+}

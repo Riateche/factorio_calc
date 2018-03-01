@@ -15,7 +15,7 @@
     <div class="dropdown-content" *ngIf="visibleOptions().length > 0">
       <a
         *ngFor = "let option of visibleOptions()"
-        [ngClass]="{ 'dropdown-item': !option.is_separator, 'dropdown-divider': option.is_separator }"
+        [ngClass]="{ 'dropdown-item': !option.is_separator, 'dropdown-divider': option.is_separator, 'dropdown-title': option.is_title }"
         (mousedown)="setCurrentOption(option)"
       >
         <span class="icon">
