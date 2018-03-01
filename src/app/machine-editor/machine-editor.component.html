@@ -1,10 +1,16 @@
 <div class="box columns">
   <div class="column sortableHandle">↕</div>
   <div class="column">
-    Type:
-    <!-- <input [(ngModel)]="machine.type"> -->
-
-    <dropdown [options]="allTypes" [(value)]="machine.type"></dropdown>
+    <span *ngIf="machine.type === ''">
+      Type or recipe:
+      <dropdown [options]="allTypesAndRecipes" (valueChange)="machine.setTypeOrRecipe($event)"></dropdown>
+    </span>
+    <span *ngIf="machine.type.length > 0">
+      Type:
+      <dropdown [options]="allTypes" [(value)]="machine.type"></dropdown>
+      Recipe:
+      <dropdown [options]="allRecipes" [(value)]="machine.recipe"></dropdown>
+    </span>
   </div>
   <div class="column">
     {{machine.test1()}}

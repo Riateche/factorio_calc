@@ -43,6 +43,7 @@ export class DropdownComponent implements OnInit {
   }
 
   openEditor() {
+    console.log("value at openEditor: ", this.value);
     this.is_active = true;
     this.currentText = "";
     setTimeout(() => this.inputElement.nativeElement.focus(), 100);

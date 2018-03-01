@@ -12,6 +12,8 @@ export class MachineEditorComponent implements OnInit {
   @Output() onDeleteRequested = new EventEmitter<void>();
 
   allTypes: Array<DropdownOption> = [];
+  allRecipes: Array<DropdownOption> = [];
+  allTypesAndRecipes: Array<DropdownOption> = [];
 
   constructor() {
     this.allTypes = [
@@ -31,13 +33,15 @@ export class MachineEditorComponent implements OnInit {
       this.createOption("oil-refinery"),
       this.createOption("chemical-plant"),
       this.createOption("centrifuge"),
-      this.createOption("rocket-silo"),
-      DropdownOption.newSeparator(),
-      DropdownOption.newTitle('Crafting recipes')
+      this.createOption("rocket-silo")
     ];
     for (let recipe of GameData.current().recipes) {
-      this.allTypes.push(this.createOption(recipe.name));
+      this.allRecipes.push(this.createOption(recipe.name));
     }
+    this.allTypesAndRecipes = this.allTypes.concat(
+      DropdownOption.newSeparator(),
+      DropdownOption.newTitle('Crafting recipes'),
+      this.allRecipes);
   }
 
   ngOnInit() {
