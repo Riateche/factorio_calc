@@ -2,8 +2,8 @@ import { GameData } from "./game-data";
 
 
 let supportedTypes: Array<string> = [
-  'matter-source',
-  'matter-sink',
+  "matter-source",
+  "matter-sink",
   "electric-mining-drill",
   "burner-mining-drill",
   "assembling-machine-1",
@@ -29,33 +29,59 @@ let recipeCategoryToMachineType = {
   "centrifuging": "centrifuge"
 };
 
+interface Module {
+  type: string;
+}
 
 export class Machine {
-  type: string = "";
+  private _type: string = "";
   recipe: string = "";
+  fuel: string = "";
+  modules: Array<Module> = [];
+
+  get type() : string {
+    return this._type;
+  }
+  set type(v: string) {
+    this._type = v;
+    this.fixModules();
+  }
 
 
   clone() : Machine {
     var r = new Machine();
     r.type = this.type;
     r.recipe = this.recipe;
+    r.fuel = this.fuel;
+    r.modules = this.modules.map(m => { return { type: m.type }; });
     return r;
   }
 
   clear() {
     this.type = "";
     this.recipe = "";
+    this.fuel = "";
+    this.modules = [];
   }
 
   static fromJson(data: any) : Machine {
+    console.log("data", data);
     var r = new Machine();
     r.type = data.type;
     r.recipe = data.recipe;
+    r.fuel = data.fuel;
+    r.modules = data.modules.map(m => { return { type: m }; });
+    console.log("r", r);
     return r;
   }
 
-  test1() {
-    return this.type + "!";
+  toJson() : any {
+    return {
+      type: this.type,
+      recipe: this.recipe,
+      fuel: this.fuel,
+      modules: this.modules.map(m => m.type)
+    };
   }
 
   setTypeOrRecipe(typeOrRecipe: string) {
@@ -75,5 +101,47 @@ export class Machine {
       this.type = recipeCategoryToMachineType[recipe.category];
       this.recipe = typeOrRecipe;
     }
+  }
+
+  hasFuel() : boolean {
+    return this.type == "burner-mining-drill" ||
+      this.type == "stone-furnace" ||
+      this.type == "steel-furnace";
+  }
+
+  moduleSlots() : number {
+    switch(this.type) {
+      case "matter-source":
+      case "matter-sink":
+        return 0;
+      case "electric-mining-drill":
+        return 3;
+      case "burner-mining-drill":
+        return 0;
+      case "assembling-machine-1":
+      case "assembling-machine-2":
+      case "assembling-machine-3":
+        return 4;
+      case "stone-furnace":
+      case "steel-furnace":
+        return 0;
+      case "electric-furnace":
+        return 2;
+      case "oil-refinery":
+      case "chemical-plant":
+        return 3;
+      case "centrifuge":
+        return 2;
+      case "rocket-silo":
+        return 4;
+    }
+  }
+
+  private fixModules() {
+    let targetCount = this.moduleSlots();
+    while(this.modules.length < targetCount) {
+      this.modules.push({ type: "" });
+    }
+    this.modules = this.modules.slice(0, targetCount);
   }
 }

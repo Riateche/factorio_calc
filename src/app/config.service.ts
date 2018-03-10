@@ -7,7 +7,7 @@ const localStorageKey: string = "factorio_calc_configs_v1";
 export class ConfigService {
   private m_allConfigs: Array<Config> = [new Config("config1"), new Config("config2"), new Config("config3")];
 
-  constructor() { 
+  constructor() {
     let data = JSON.parse(localStorage.getItem(localStorageKey)) || [];
     this.m_allConfigs = data.map(c => Config.fromJson(c));
   }
@@ -43,11 +43,12 @@ export class ConfigService {
 
   deleteConfig(name: string) {
     this.m_allConfigs = this.m_allConfigs.filter(c => c.name != name);
-    this.save();    
+    this.save();
   }
 
   private save() {
-    localStorage.setItem(localStorageKey, JSON.stringify(this.m_allConfigs));
+    localStorage.setItem(localStorageKey,
+      JSON.stringify(this.m_allConfigs.map(c => c.toJson())));
   }
 
 

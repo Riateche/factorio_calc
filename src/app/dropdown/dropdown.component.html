@@ -4,7 +4,7 @@
     <span class="icon" *ngIf="currentIcon().length > 0">
         <img [src]="currentIcon()">
     </span>
-    <span>{{value.length > 0 ? value: placeholder }}</span>
+    <span *ngIf="valueText().length > 0">{{valueText()}}</span>
   </button>
 </span>
 <div class="dropdown is-active" *ngIf="is_active">

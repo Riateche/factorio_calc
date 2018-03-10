@@ -23,6 +23,14 @@ export class Config {
     return r;
   }
 
+  toJson() : any {
+    return {
+      name: this.name,
+      title: this.title,
+      machines: this.machines.map(m => m.toJson()),
+    };
+  }
+
   displayName() : string {
     if (this.title != "") {
       return this.title;

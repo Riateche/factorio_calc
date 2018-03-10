@@ -14,6 +14,8 @@ export class MachineEditorComponent implements OnInit {
   allTypes: Array<DropdownOption> = [];
   allRecipes: Array<DropdownOption> = [];
   allTypesAndRecipes: Array<DropdownOption> = [];
+  allFuelTypes: Array<DropdownOption> = [];
+  allModuleTypes: Array<DropdownOption> = [];
 
   constructor() {
     this.allTypes = [
@@ -42,6 +44,31 @@ export class MachineEditorComponent implements OnInit {
       DropdownOption.newSeparator(),
       DropdownOption.newTitle('Crafting recipes'),
       this.allRecipes);
+
+    this.allFuelTypes = [
+      "coal",
+      "solid-fuel",
+      "rocket-fuel",
+      "nuclear-fuel",
+      "uranium-fuel-cell",
+      "raw-wood",
+      "wood",
+      "small-electric-pole",
+      "wooden-chest"
+    ].map(name => this.createOption(name));
+
+    this.allModuleTypes = [
+      "speed-module",
+      "speed-module-2",
+      "speed-module-3",
+      "effectivity-module",
+      "effectivity-module-2",
+      "effectivity-module-3",
+      "productivity-module",
+      "productivity-module-2",
+      "productivity-module-3"
+    ].map(name => this.createOption(name));
+
   }
 
   ngOnInit() {

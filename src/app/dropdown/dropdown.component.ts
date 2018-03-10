@@ -28,6 +28,7 @@ export class DropdownOption {
 export class DropdownComponent implements OnInit {
   @Input() options: Array<DropdownOption> = [];
   @Input() placeholder: string = "(unset)";
+  @Input() showIconOnly: boolean = false;
   @ViewChild("input") inputElement: ElementRef;
   is_active = false;
   @Input() value: string = "";
@@ -98,6 +99,14 @@ export class DropdownComponent implements OnInit {
       this.confirm();
     } else if (event.key == "ArrowDown") {
       //...
+    }
+  }
+
+  valueText() {
+    if (this.value.length > 0) {
+      return this.showIconOnly ? "" : this.value;
+    } else {
+      return this.placeholder;
     }
   }
 }
