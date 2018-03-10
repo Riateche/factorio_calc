@@ -50,7 +50,6 @@ export class MachineEditorComponent implements OnInit {
       "solid-fuel",
       "rocket-fuel",
       "nuclear-fuel",
-      "uranium-fuel-cell",
       "raw-wood",
       "wood",
       "small-electric-pole",
