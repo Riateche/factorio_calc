@@ -22,3 +22,7 @@
 .input.machineCount {
   width: 50px;
 }
+.label {
+  display: inline;
+  color: #888;
+}

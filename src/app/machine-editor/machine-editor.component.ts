@@ -83,5 +83,13 @@ export class MachineEditorComponent implements OnInit {
     return new DropdownOption({ icon: `assets/game_icons/${iconName}.png`, value: name });
   }
 
+  hasAnyKey(value: any) {
+    for(let x in value) {
+      return true;
+    }
+    return false;
+
+  }
+
 
 }

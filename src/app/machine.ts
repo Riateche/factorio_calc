@@ -63,6 +63,7 @@ class Module {
   }
   set type(v: string) {
     this._type = v;
+    //console.log("ok2", v, this);
     this.machine.updateProperties();
   }
 }
@@ -89,18 +90,22 @@ export class Machine {
     return this._count;
   }
   set count(v: number) {
-    console.log("v = ", v);
+    // console.log("v = ", v);
     if (typeof(v) == "string") {
-      if (this.type === "matter-source" ||
-          this.type === "matter-sink") {
-        this._count = parseFloat(v as any as string);
+      if (v === "") {
+        return;
       } else {
-        this._count = parseInt(v as any as string);
+        if (this.type === "matter-source" ||
+            this.type === "matter-sink") {
+          this._count = parseFloat(v as any as string);
+        } else {
+          this._count = parseInt(v as any as string);
+        }
       }
     } else {
       this._count = v;
     }
-    console.log("count = ", this._count);
+    // console.log("count = ", this._count);
     this.updateProperties();
   }
 
@@ -123,7 +128,7 @@ export class Machine {
     r.type = this.type;
     r.recipe = this.recipe;
     r.fuel = this.fuel;
-    r.modules = this.modules.map(m => new Module(m.type, this));
+    r.modules = this.modules.map(m => new Module(m.type, r));
     r.count = this.count;
     return r;
   }
@@ -149,6 +154,7 @@ export class Machine {
   }
 
   toJson() : any {
+    //console.log("machine toJson", this);
     return {
       type: this.type,
       recipe: this.recipe,
@@ -223,9 +229,13 @@ export class Machine {
     this.maxInput = {};
     this.maxOutput = {};
     if (this.type == "matter-source") {
-      this.maxOutput[this.recipe] = 1;
+      if (this.recipe !== "") {
+        this.maxOutput[this.recipe] = 1;
+      }
     } else if (this.type == "matter-sink") {
-      this.maxInput[this.recipe] = 1;
+      if (this.recipe !== "") {
+        this.maxInput[this.recipe] = 1;
+      }
     } else if (this.type == "electric-mining-drill") {
       let speed = {
         "iron-ore": 0.525,
@@ -352,6 +362,7 @@ export class Machine {
     if (energyConsumptionCoef < 0.2) {
       energyConsumptionCoef = 0.2;
     }
+    //console.log("ok4", speedCoef, productivityCoef, energyConsumptionCoef, this.modules);
 
     for(let key in this.maxInput) {
       if (key === "MW") {
@@ -363,5 +374,6 @@ export class Machine {
     for(let key in this.maxOutput) {
       this.maxOutput[key] *= this.count * speedCoef * productivityCoef;
     }
+    // console.log("after updateproperties: input", this.maxInput, "output", this.maxOutput);
   }
 }

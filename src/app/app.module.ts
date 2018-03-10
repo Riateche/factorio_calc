@@ -12,6 +12,7 @@ import { MachineEditorComponent } from './machine-editor/machine-editor.componen
 import { SortablejsModule } from 'angular-sortablejs';
 import { TempComponent } from './temp/temp.component';
 import { DropdownComponent } from './dropdown/dropdown.component';
+import { ItemsSpeedComponent } from './items-speed/items-speed.component';
 
 @NgModule({
   declarations: [
@@ -20,7 +21,8 @@ import { DropdownComponent } from './dropdown/dropdown.component';
     ConfigEditorComponent,
     MachineEditorComponent,
     TempComponent,
-    DropdownComponent
+    DropdownComponent,
+    ItemsSpeedComponent
   ],
   imports: [
     BrowserModule,

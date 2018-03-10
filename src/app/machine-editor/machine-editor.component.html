@@ -2,7 +2,7 @@
   <div class="column sortableHandle">↕</div>
   <div class="column">
     <span *ngIf="machine.type === ''">
-      Select type or recipe:
+      <span class="label">Select type or recipe:</span>
       <dropdown [options]="allTypesAndRecipes" (valueChange)="machine.setTypeOrRecipe($event)"></dropdown>
     </span>
     <span *ngIf="machine.type.length > 0">
@@ -12,11 +12,11 @@
       <dropdown [options]="allRecipes" [(value)]="machine.recipe"></dropdown>
       <div class="extraSettings">
         <span *ngIf="machine.hasFuel()">
-          Fuel:
+        <span class="label">Fuel:</span>
           <dropdown [options]="allFuelTypes" [(value)]="machine.fuel"></dropdown>
         </span>
         <span *ngIf="machine.modules.length > 0">
-          Modules:
+          <span class="label">Modules:</span>
           <span *ngFor="let module of machine.modules">
             <dropdown [options]="allModuleTypes" [(value)]="module.type" placeholder="–" showIconOnly="true"></dropdown>
           </span>
@@ -27,7 +27,13 @@
     </span>
   </div>
   <div class="column">
-    ...
+    <span class="label">In:</span>
+    <items-speed [value]="machine.maxInput"></items-speed>
+    <span *ngIf="!hasAnyKey(machine.maxInput)">–</span>
+    <br>
+    <span class="label">Out:</span>
+    <items-speed [value]="machine.maxOutput"></items-speed>
+    <span *ngIf="!hasAnyKey(machine.maxOutput)">–</span>
   </div>
   <div class="column deleteColumn">
     <a class="delete is-medium" title="Remove machine" (click)="onDeleteRequested.emit()"></a>
