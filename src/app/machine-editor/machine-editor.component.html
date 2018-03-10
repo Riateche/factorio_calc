@@ -6,6 +6,7 @@
       <dropdown [options]="allTypesAndRecipes" (valueChange)="machine.setTypeOrRecipe($event)"></dropdown>
     </span>
     <span *ngIf="machine.type.length > 0">
+      <input type="text" [(ngModel)]="machine.count" class="input machineCount">
       <dropdown [options]="allTypes" [(value)]="machine.type"></dropdown>
       for
       <dropdown [options]="allRecipes" [(value)]="machine.recipe"></dropdown>

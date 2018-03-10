@@ -38,6 +38,7 @@ export class Machine {
   recipe: string = "";
   fuel: string = "";
   modules: Array<Module> = [];
+  private _count: number = 1;
 
   get type() : string {
     return this._type;
@@ -47,6 +48,24 @@ export class Machine {
     this.fixModules();
   }
 
+  get count() : number {
+    return this._count;
+  }
+  set count(v: number) {
+    console.log("v = ", v);
+    if (typeof(v) == "string") {
+      if (this.type === "matter-source" ||
+          this.type === "matter-sink") {
+        this._count = parseFloat(v as any as string);
+      } else {
+        this._count = parseInt(v as any as string);
+      }
+    } else {
+      this._count = v;
+    }
+    console.log("count = ", this._count);
+  }
+
 
   clone() : Machine {
     var r = new Machine();
@@ -54,6 +73,7 @@ export class Machine {
     r.recipe = this.recipe;
     r.fuel = this.fuel;
     r.modules = this.modules.map(m => { return { type: m.type }; });
+    r.count = this.count;
     return r;
   }
 
@@ -62,16 +82,18 @@ export class Machine {
     this.recipe = "";
     this.fuel = "";
     this.modules = [];
+    this.count = 1;
   }
 
   static fromJson(data: any) : Machine {
-    console.log("data", data);
+    // console.log("data", data);
     var r = new Machine();
     r.type = data.type;
     r.recipe = data.recipe;
     r.fuel = data.fuel;
+    r.count = data.count;
     r.modules = data.modules.map(m => { return { type: m }; });
-    console.log("r", r);
+    // console.log("r", r);
     return r;
   }
 
@@ -80,7 +102,8 @@ export class Machine {
       type: this.type,
       recipe: this.recipe,
       fuel: this.fuel,
-      modules: this.modules.map(m => m.type)
+      modules: this.modules.map(m => m.type),
+      count: this.count
     };
   }
 

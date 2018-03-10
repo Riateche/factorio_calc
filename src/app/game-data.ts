@@ -28,7 +28,7 @@ export class GameData {
 
   static current(): GameData {
     let r = new GameData();
-    r.recipes = recipes_0_16_json;
+    r.recipes = recipes_0_16_json as any as Array<Recipe>;
     return r;
   }
 }
