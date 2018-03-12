@@ -73,7 +73,7 @@ export class Machine {
   private _recipe: string = "";
   private _fuel: string = "";
   modules: Array<Module> = [];
-  private _count: number = 1;
+  private _countText: string = "1";
   maxInput: any = {};
   maxOutput: any = {};
 
@@ -86,26 +86,26 @@ export class Machine {
     this.updateProperties();
   }
 
-  get count() : number {
-    return this._count;
-  }
-  set count(v: number) {
-    // console.log("v = ", v);
-    if (typeof(v) == "string") {
-      if (v === "") {
-        return;
-      } else {
-        if (this.type === "matter-source" ||
-            this.type === "matter-sink") {
-          this._count = parseFloat(v as any as string);
-        } else {
-          this._count = parseInt(v as any as string);
-        }
-      }
+  count() : number {
+    var r;
+    if (this.type === "matter-source" ||
+        this.type === "matter-sink") {
+      r = parseFloat(this._countText);
     } else {
-      this._count = v;
+      r = parseInt(this._countText);
     }
-    // console.log("count = ", this._count);
+    if (r != r) {
+      return 1;
+    } else {
+      return r;
+    }
+  }
+
+  get countText() : string {
+    return this._countText;
+  }
+  set countText(v: string) {
+    this._countText = v;
     this.updateProperties();
   }
 
@@ -129,7 +129,7 @@ export class Machine {
     r.recipe = this.recipe;
     r.fuel = this.fuel;
     r.modules = this.modules.map(m => new Module(m.type, r));
-    r.count = this.count;
+    r.countText = this.count().toString();
     return r;
   }
 
@@ -138,7 +138,7 @@ export class Machine {
     this.recipe = "";
     this.fuel = "";
     this.modules = [];
-    this.count = 1;
+    this.countText = "1";
   }
 
   static fromJson(data: any) : Machine {
@@ -147,7 +147,7 @@ export class Machine {
     r.type = data.type;
     r.recipe = data.recipe;
     r.fuel = data.fuel;
-    r.count = data.count;
+    r.countText = data.count.toString();
     r.modules = data.modules.map(m => new Module(m, r));
     // console.log("r", r);
     return r;
@@ -160,7 +160,7 @@ export class Machine {
       recipe: this.recipe,
       fuel: this.fuel,
       modules: this.modules.map(m => m.type),
-      count: this.count
+      count: this.count()
     };
   }
 
@@ -366,13 +366,13 @@ export class Machine {
 
     for(let key in this.maxInput) {
       if (key === "MW") {
-        this.maxInput[key] *= this.count * energyConsumptionCoef;
+        this.maxInput[key] *= this.count() * energyConsumptionCoef;
       } else {
-        this.maxInput[key] *= this.count * speedCoef;
+        this.maxInput[key] *= this.count() * speedCoef;
       }
     }
     for(let key in this.maxOutput) {
-      this.maxOutput[key] *= this.count * speedCoef * productivityCoef;
+      this.maxOutput[key] *= this.count() * speedCoef * productivityCoef;
     }
     // console.log("after updateproperties: input", this.maxInput, "output", this.maxOutput);
   }
