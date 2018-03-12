@@ -32,16 +32,31 @@
 
   <h2 class="title is-4">Machines:</h2>
 
+  <div class="columns tableHeader">
+    <div class="column sortableHandleColumn"></div>
+    <div class="column configColumn">
+      Config
+    </div>
+    <div class="column">
+      Max I/O
+    </div>
+    <div class="column">
+      Load & fails
+    </div>
+    <div class="column">
+      Actual I/O
+    </div>
+    <div class="column deleteColumn"></div>
+  </div>
   <div [sortablejs]="config.machines">
     <div *ngFor="let machine of config.machines" class="machineContainer">
       <machine-editor [machine]="machine" (onDeleteRequested)="deleteMachine(machine)"></machine-editor>
     </div>
   </div>
 
-  <div *ngIf="config.totalIO">
-    <h2 class="title is-4">Total input and output:</h2>
+  <div *ngIf="config.totalIO" class="totalIO">
+    <span class="label">Total input and output:</span>
     <items-speed [value]="config.totalIO"></items-speed>
-
   </div>
 
   <div class="field is-grouped">

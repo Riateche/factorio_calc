@@ -1,5 +1,10 @@
 <span *ngFor="let item of valueAsList()" class="item">
-  {{item.speed | number:'1.0-2'}}
+  <span *ngIf="fractionMode">
+    {{item.speed * 100 | number:'1.0-0'}}%
+  </span>
+  <span *ngIf="!fractionMode">
+    {{item.speed | number:'1.0-2'}}
+  </span>
   <span class="icon" *ngIf="item.item !== 'MW'">
     <img [src]="itemIcon(item.item)" [alt]="item.item" [title]="item.item">
   </span>

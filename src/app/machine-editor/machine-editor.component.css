@@ -1,13 +1,4 @@
-.sortableHandle {
-  font-size: 130%;
-  cursor: ns-resize;
-  flex-basis: 20px;
-  flex-grow: 0;
-}
-.deleteColumn {
-  flex-basis: 20px;
-  flex-grow: 0;
-}
+
 .delete {
   background-color: #FF8AA2;
 }
@@ -21,8 +12,4 @@
 }
 .input.machineCount {
   width: 50px;
-}
-.label {
-  display: inline;
-  color: #888;
 }

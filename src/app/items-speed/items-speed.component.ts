@@ -7,6 +7,7 @@ import { Component, OnInit, Input } from '@angular/core';
 })
 export class ItemsSpeedComponent implements OnInit {
   @Input() value: any;
+  @Input() fractionMode: boolean = false;
 
   constructor() { }
 

@@ -1,6 +1,6 @@
-<div class="box columns">
-  <div class="column sortableHandle">↕</div>
-  <div class="column">
+<div class="columns">
+  <div class="column sortableHandle sortableHandleColumn">↕</div>
+  <div class="column configColumn">
     <span *ngIf="machine.type === ''">
       <span class="label">Select type or recipe:</span>
       <dropdown [options]="allTypesAndRecipes" (valueChange)="machine.setTypeOrRecipe($event)"></dropdown>
@@ -35,10 +35,20 @@
   </div>
   <div class="column">
     <div *ngIf="machine.emulatorResult">
-      <span class="label">Load:</span>
-      {{machine.emulatorResult.load}}
+      {{machine.emulatorResult.load * 100 | number: '1.0-0' }}%
       <br>
-
+      <span *ngIf="hasAnyKey(machine.emulatorResult.inputFails)">
+        <span class="label">Input fails:</span>
+        <items-speed [value]="machine.emulatorResult.inputFails" fractionMode="true"></items-speed>
+      </span>
+      <span *ngIf="hasAnyKey(machine.emulatorResult.outputFails)">
+        <span class="label">Output fails:</span>
+        <items-speed [value]="machine.emulatorResult.outputFails" fractionMode="true"></items-speed>
+      </span>
+    </div>
+  </div>
+  <div class="column">
+    <div *ngIf="machine.emulatorResult">
       <span class="label">In:</span>
       <items-speed [value]="machine.emulatorResult.input"></items-speed>
       <span *ngIf="!hasAnyKey(machine.emulatorResult.input)">–</span>
@@ -48,16 +58,6 @@
       <span *ngIf="!hasAnyKey(machine.emulatorResult.output)">–</span>
     </div>
   </div>
-  <div class="column">
-    <div *ngIf="machine.emulatorResult">
-      <span class="label">In:</span>
-      <items-speed [value]="machine.emulatorResult.inputFails"></items-speed>
-      <span *ngIf="!hasAnyKey(machine.emulatorResult.inputFails)">–</span>
-      <br>
-      <span class="label">Out:</span>
-      <items-speed [value]="machine.emulatorResult.outputFails"></items-speed>
-      <span *ngIf="!hasAnyKey(machine.emulatorResult.outputFails)">–</span>
-    </div>
   <div class="column deleteColumn">
     <a class="delete is-medium" title="Remove machine" (click)="onDeleteRequested.emit()"></a>
   </div>
