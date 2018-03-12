@@ -40,15 +40,15 @@ let supportedTypes: Array<string> = [
   "rocket-silo"
 ];
 
-let recipeCategoryToMachineType = {
-  "crafting": "assembling-machine-2",
-  "crafting-with-fluid": "assembling-machine-2",
-  "advanced-crafting": "assembling-machine-2",
-  "chemistry": "chemical-plant",
-  "oil-processing": "oil-refinery",
-  "rocket-building": "rocket-silo",
-  "smelting": "stone-furnace",
-  "centrifuging": "centrifuge"
+export let recipeCategoryToMachineTypes = {
+  "crafting": ["assembling-machine-1", "assembling-machine-2", "assembling-machine-3"],
+  "crafting-with-fluid": ["assembling-machine-1", "assembling-machine-2", "assembling-machine-3"],
+  "advanced-crafting": ["assembling-machine-1", "assembling-machine-2", "assembling-machine-3"],
+  "chemistry": ["chemical-plant"],
+  "oil-processing": ["oil-refinery"],
+  "rocket-building": ["rocket-silo"],
+  "smelting": ["stone-furnace", "steel-furnace", "electric-furnace"],
+  "centrifuging": ["centrifuge"]
 };
 
 class Module {
@@ -177,15 +177,16 @@ export class Machine {
     } else {
       let recipe = GameData.current().recipes.find(recipe => recipe.name == typeOrRecipe);
       if (!recipe) {
-        alert("Unknown recipe");
-        return;
+        this.type = "matter-source";
+        this.recipe = typeOrRecipe;
+      } else {
+        if (!recipeCategoryToMachineTypes[recipe.category]) {
+          alert("Unknown recipe category");
+          return;
+        }
+        this.type = recipeCategoryToMachineTypes[recipe.category][0];
+        this.recipe = typeOrRecipe;
       }
-      if (!recipeCategoryToMachineType[recipe.category]) {
-        alert("Unknown recipe category");
-        return;
-      }
-      this.type = recipeCategoryToMachineType[recipe.category];
-      this.recipe = typeOrRecipe;
     }
   }
 

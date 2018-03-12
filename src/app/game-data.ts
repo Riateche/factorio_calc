@@ -23,12 +23,43 @@ export class Recipe {
   products: Array<RecipeIngredient>;
 }
 
+
+let cache : GameData;
+
 export class GameData {
-  recipes: Array<Recipe>;
+  recipes: Array<Recipe> = [];
+  allItems: Array<string> = [];
+  allItemsNotRecipeNames : Array<string> = [];
+
 
   static current(): GameData {
+    if (cache) { return cache; }
     let r = new GameData();
     r.recipes = recipes_0_16_json as any as Array<Recipe>;
+
+    let recipeNames = {};
+    for(let recipe of r.recipes) {
+      for(let ing of recipe.ingredients) {
+        if (r.allItems.indexOf(ing.name) === -1) {
+          r.allItems.push(ing.name);
+        }
+      }
+      for(let ing of recipe.products) {
+        if (r.allItems.indexOf(ing.name) === -1) {
+          r.allItems.push(ing.name);
+        }
+      }
+      recipeNames[recipe.name] = true;
+    }
+    r.allItems.sort();
+    for(let name of r.allItems) {
+      if (!recipeNames[name]) {
+        r.allItemsNotRecipeNames.push(name);
+      }
+    }
+    r.allItemsNotRecipeNames.sort();
+    cache = r;
     return r;
   }
+
 }

@@ -24,4 +24,15 @@ export class ItemsSpeedComponent implements OnInit {
     return x;
   }
 
+
+  itemIcon(item: string) : string {
+    let iconName = item;
+    if ((new RegExp('^empty-.*-barrel$')).test(item)) {
+      iconName = "barrel-empty";
+    } else if ((new RegExp('^fill-.*-barrel$')).test(item)) {
+      iconName = "barrel-fill";
+    }
+    return `assets/game_icons/${iconName}.png`;
+  }
+
 }

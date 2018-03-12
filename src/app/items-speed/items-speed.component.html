@@ -1,7 +1,7 @@
 <span *ngFor="let item of valueAsList()" class="item">
   {{item.speed | number:'1.0-2'}}
   <span class="icon" *ngIf="item.item !== 'MW'">
-    <img [src]="'assets/game_icons/' + item.item + '.png'">
+    <img [src]="itemIcon(item.item)" [alt]="item.item" [title]="item.item">
   </span>
   <span *ngIf="item.item === 'MW'">
     MW
