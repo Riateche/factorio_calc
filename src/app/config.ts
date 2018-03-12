@@ -1,9 +1,11 @@
 import { Machine } from './machine';
+import { runEmulator } from './emulator';
 
 export class Config {
   name: string = "";
   title: string = "";
   machines: Array<Machine> = [];
+  totalIO: {[key: string]: number};
 
   constructor(name?: string) {
     this.name = name;
@@ -38,4 +40,48 @@ export class Config {
       return this.name;
     }
   }
+
+  runEmulator() {
+    this.autoAddSourcesAndSinks();
+    this.totalIO = runEmulator(this.machines);
+  }
+
+  autoAddSourcesAndSinks() {
+    let allInputs = {};
+    for(let i = 0; i < this.machines.length; i++) {
+      for(let item in this.machines[i].maxInput || {}) {
+        allInputs[item] = true;
+      }
+    }
+    let allOutputs = {};
+    for(let i = 0; i < this.machines.length; i++) {
+      for(let item in this.machines[i].maxOutput || {}) {
+        allOutputs[item] = true;
+      }
+    }
+    for(let item in allInputs) {
+      if (!allOutputs[item]) {
+        let machine = new Machine();
+        machine.type = "matter-source";
+        machine.recipe = item;
+        machine.count = 100;
+        this.machines.push(machine);
+      }
+    }
+    for(let item in allOutputs) {
+      if (!allInputs[item]) {
+        let machine = new Machine();
+        machine.type = "matter-sink";
+        machine.recipe = item;
+        machine.count = 100;
+        this.machines.push(machine);
+      }
+    }
+
+
+
+
+  }
+
+
 }

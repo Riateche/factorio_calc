@@ -1,4 +1,5 @@
 import { GameData } from "./game-data";
+import { EmulatorResult } from "./emulator"
 
 /*! Returns number of items of `fuel` per second required to satisfy
   the given `energy` consumption (in MW).
@@ -76,6 +77,7 @@ export class Machine {
   private _countText: string = "1";
   maxInput: any = {};
   maxOutput: any = {};
+  emulatorResult: EmulatorResult;
 
   get type() : string {
     return this._type;
@@ -86,7 +88,7 @@ export class Machine {
     this.updateProperties();
   }
 
-  count() : number {
+  get count() : number {
     var r;
     if (this.type === "matter-source" ||
         this.type === "matter-sink") {
@@ -99,6 +101,10 @@ export class Machine {
     } else {
       return r;
     }
+  }
+  set count(v: number) {
+    this._countText = v.toString();
+    this.updateProperties();
   }
 
   get countText() : string {
@@ -129,7 +135,7 @@ export class Machine {
     r.recipe = this.recipe;
     r.fuel = this.fuel;
     r.modules = this.modules.map(m => new Module(m.type, r));
-    r.countText = this.count().toString();
+    r.count = this.count;
     return r;
   }
 
@@ -138,7 +144,7 @@ export class Machine {
     this.recipe = "";
     this.fuel = "";
     this.modules = [];
-    this.countText = "1";
+    this.count = 1;
   }
 
   static fromJson(data: any) : Machine {
@@ -160,7 +166,7 @@ export class Machine {
       recipe: this.recipe,
       fuel: this.fuel,
       modules: this.modules.map(m => m.type),
-      count: this.count()
+      count: this.count
     };
   }
 
@@ -366,13 +372,13 @@ export class Machine {
 
     for(let key in this.maxInput) {
       if (key === "MW") {
-        this.maxInput[key] *= this.count() * energyConsumptionCoef;
+        this.maxInput[key] *= this.count * energyConsumptionCoef;
       } else {
-        this.maxInput[key] *= this.count() * speedCoef;
+        this.maxInput[key] *= this.count * speedCoef;
       }
     }
     for(let key in this.maxOutput) {
-      this.maxOutput[key] *= this.count() * speedCoef * productivityCoef;
+      this.maxOutput[key] *= this.count * speedCoef * productivityCoef;
     }
     // console.log("after updateproperties: input", this.maxInput, "output", this.maxOutput);
   }

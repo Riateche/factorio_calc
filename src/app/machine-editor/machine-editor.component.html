@@ -20,8 +20,6 @@
           <span *ngFor="let module of machine.modules">
             <dropdown [options]="allModuleTypes" [(value)]="module.type" placeholder="–" showIconOnly="true"></dropdown>
           </span>
-
-
         </span>
       </div>
     </span>
@@ -35,6 +33,31 @@
     <items-speed [value]="machine.maxOutput"></items-speed>
     <span *ngIf="!hasAnyKey(machine.maxOutput)">–</span>
   </div>
+  <div class="column">
+    <div *ngIf="machine.emulatorResult">
+      <span class="label">Load:</span>
+      {{machine.emulatorResult.load}}
+      <br>
+
+      <span class="label">In:</span>
+      <items-speed [value]="machine.emulatorResult.input"></items-speed>
+      <span *ngIf="!hasAnyKey(machine.emulatorResult.input)">–</span>
+      <br>
+      <span class="label">Out:</span>
+      <items-speed [value]="machine.emulatorResult.output"></items-speed>
+      <span *ngIf="!hasAnyKey(machine.emulatorResult.output)">–</span>
+    </div>
+  </div>
+  <div class="column">
+    <div *ngIf="machine.emulatorResult">
+      <span class="label">In:</span>
+      <items-speed [value]="machine.emulatorResult.inputFails"></items-speed>
+      <span *ngIf="!hasAnyKey(machine.emulatorResult.inputFails)">–</span>
+      <br>
+      <span class="label">Out:</span>
+      <items-speed [value]="machine.emulatorResult.outputFails"></items-speed>
+      <span *ngIf="!hasAnyKey(machine.emulatorResult.outputFails)">–</span>
+    </div>
   <div class="column deleteColumn">
     <a class="delete is-medium" title="Remove machine" (click)="onDeleteRequested.emit()"></a>
   </div>

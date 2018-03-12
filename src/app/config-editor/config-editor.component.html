@@ -33,14 +33,23 @@
   <h2 class="title is-4">Machines:</h2>
 
   <div [sortablejs]="config.machines">
-      <div *ngFor="let machine of config.machines" class="machineContainer">
-        <machine-editor [machine]="machine" (onDeleteRequested)="deleteMachine(machine)"></machine-editor>
-      </div>
+    <div *ngFor="let machine of config.machines" class="machineContainer">
+      <machine-editor [machine]="machine" (onDeleteRequested)="deleteMachine(machine)"></machine-editor>
     </div>
+  </div>
+
+  <div *ngIf="config.totalIO">
+    <h2 class="title is-4">Total input and output:</h2>
+    <items-speed [value]="config.totalIO"></items-speed>
+
+  </div>
 
   <div class="field is-grouped">
     <p class="control">
       <button class="button" (click)="addMachine()">Add machine</button>
+    </p>
+    <p class="control">
+      <button class="button" (click)="config.runEmulator()">Run emulator</button>
     </p>
   </div>
 
