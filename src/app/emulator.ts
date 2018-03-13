@@ -103,15 +103,12 @@ export function runEmulator(machines: Array<Machine>) : GlobalEmulatorResult {
     let max_count1 = 0;
     let max_count2 = 0;
     for(let i = 0; i < modules.length; i++) {
-      //console.log("module", $.extend(modules[i], {}));
       if (((modules[i].machine.maxInput || [])[item] || 0) > THR) {
         let v = modules[i].machine.maxInput[item] * dt;
-        //console.log("item", item, "v", v);
         max_count2 += v;
       }
       if (((modules[i].machine.maxOutput || [])[item] || 0) > THR) {
         let v = modules[i].machine.maxOutput[item] * dt;
-        //console.log("item", item, "v", v);
         max_count1 += v;
       }
     }
@@ -127,7 +124,6 @@ export function runEmulator(machines: Array<Machine>) : GlobalEmulatorResult {
 
 
   for(let cycle_i = 0; cycle_i < total_cycles; cycle_i++) {
-    //console.log("buffers", $.map(buffers, function(x) { return $.extend(x, {}); }));
     for(let item in buffers) {
       buffers[item].tick();
     }
@@ -138,13 +134,11 @@ export function runEmulator(machines: Array<Machine>) : GlobalEmulatorResult {
         modules[i].inputFails = {};
         modules[i].outputFails = {};
       }
-      //console.log("trying to run", i);
       let has_inputs = true;
       for(let item in modules[i].machine.maxInput || []) {
         if (!buffers[item].take(modules[i].machine.maxInput[item] * dt, true)) {
           has_inputs = false;
           modules[i].inputFails[item] = (modules[i].inputFails[item] || 0) + 1;
-          //console.log("missing input", item);
           break;
         }
       }
@@ -154,12 +148,10 @@ export function runEmulator(machines: Array<Machine>) : GlobalEmulatorResult {
         if (!buffers[item].put(modules[i].machine.maxOutput[item] * dt, true)) {
           can_output = false;
           modules[i].outputFails[item] = (modules[i].outputFails[item] || 0) + 1;
-          //console.log("missing output", item);
           break;
         }
       }
       if (!can_output) { continue; }
-      //console.log("running");
       for(let item in modules[i].machine.maxInput || []) {
         buffers[item].take(modules[i].machine.maxInput[item] * dt);
       }
@@ -168,7 +160,6 @@ export function runEmulator(machines: Array<Machine>) : GlobalEmulatorResult {
       }
       modules[i].cycles++;
     }
-    //console.log("item_counts 3", item_counts);
   }
   for(let i = 0; i < modules.length; i++) {
     let result = {

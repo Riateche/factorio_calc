@@ -25,7 +25,6 @@ class Module {
   }
   set type(v: string) {
     this._type = v;
-    //console.log("ok2", v, this);
     this.machine.updateProperties();
   }
 }
@@ -113,7 +112,6 @@ export class Machine {
   }
 
   static fromJson(data: any) : Machine {
-    // console.log("data", data);
     var r = new Machine();
     r.type = data.type;
     r.recipe = data.recipe;
@@ -121,12 +119,10 @@ export class Machine {
     r.countText = data.count.toString();
     r.modules = data.modules.map(m => new Module(m, r));
     r.isAutoAdded = data.isAutoAdded;
-    // console.log("r", r);
     return r;
   }
 
   toJson() : any {
-    //console.log("machine toJson", this);
     return {
       type: this.type,
       recipe: this.recipe,
@@ -204,6 +200,9 @@ export class Machine {
     try {
       this.maxInput = {};
       this.maxOutput = {};
+      if (this.count <= 0) {
+        throw new Error("invalid count");
+      }
       if (this.type == "matter-source") {
         if (this.recipe !== "") {
           this.maxOutput[this.recipe] = 1;
@@ -221,8 +220,7 @@ export class Machine {
           "uranium-ore": 0.2625
         }[this.recipe];
         if (!speed) {
-          console.log("error: unknown drill target");
-          return;
+          throw new Error("unknown drill target");
         }
         this.maxOutput[this.recipe] = speed;
         if (this.recipe == "uranium-ore") {
