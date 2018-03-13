@@ -61,6 +61,7 @@ export class MachineEditorComponent implements OnInit {
     for(let item of gameData.allItems) {
       allItems.push(this.createOption(item));
     }
+    allItems.push(this.createOption("MW"));
     this.recipesPerType["matter-source"] = allItems;
     this.recipesPerType["matter-sink"] = allItems;
     this.recipesPerType["electric-mining-drill"] =
@@ -95,6 +96,7 @@ export class MachineEditorComponent implements OnInit {
       "productivity-module-2",
       "productivity-module-3"
     ].map(name => this.createOption(name));
+    //this.allModuleTypes.unshift(new DropdownOption({ value: "",  }))
 
   }
 
