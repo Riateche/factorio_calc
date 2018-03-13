@@ -54,9 +54,12 @@
     </div>
   </div>
 
-  <div *ngIf="config.totalIO" class="totalIO">
-    <span class="label">Total input and output:</span>
-    <items-speed [value]="config.totalIO"></items-speed>
+  <div *ngIf="config.emulatorResult" class="totalIO">
+    <span class="label">Total input:</span>
+    <items-speed [value]="config.emulatorResult.totalInput"></items-speed>
+    &nbsp;&nbsp;&nbsp;
+    <span class="label">Total output:</span>
+    <items-speed [value]="config.emulatorResult.totalOutput"></items-speed>
   </div>
 
   <div class="field is-grouped">

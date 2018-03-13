@@ -1,11 +1,11 @@
 import { Machine } from './machine';
-import { runEmulator } from './emulator';
+import { runEmulator, GlobalEmulatorResult } from './emulator';
 
 export class Config {
   name: string = "";
   title: string = "";
   machines: Array<Machine> = [];
-  totalIO: {[key: string]: number};
+  emulatorResult: GlobalEmulatorResult;
 
   constructor(name?: string) {
     this.name = name;
@@ -43,10 +43,11 @@ export class Config {
 
   runEmulator() {
     this.autoAddSourcesAndSinks();
-    this.totalIO = runEmulator(this.machines);
+    this.emulatorResult = runEmulator(this.machines);
   }
 
   autoAddSourcesAndSinks() {
+    this.machines = this.machines.filter(m => !m.isAutoAdded);
     let allInputs = {};
     for(let i = 0; i < this.machines.length; i++) {
       for(let item in this.machines[i].maxInput || {}) {
@@ -65,6 +66,7 @@ export class Config {
         machine.type = "matter-source";
         machine.recipe = item;
         machine.count = 100;
+        machine.isAutoAdded = true;
         this.machines.push(machine);
       }
     }
@@ -74,6 +76,7 @@ export class Config {
         machine.type = "matter-sink";
         machine.recipe = item;
         machine.count = 100;
+        machine.isAutoAdded = true;
         this.machines.push(machine);
       }
     }

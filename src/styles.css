@@ -1,9 +1,11 @@
 /* You can add global styles to this file, and also import other style files */
 @import 'bulma/css/bulma.css';
 
+.sortableHandle {
+  cursor: ns-resize;
+}
 .sortableHandleColumn {
   font-size: 130%;
-  cursor: ns-resize;
   flex-basis: 20px;
   flex-grow: 0;
 }

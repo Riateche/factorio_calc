@@ -40,6 +40,7 @@ export class Machine {
   maxOutput: any = {};
   emulatorResult: EmulatorResult;
   errorString: string = "";
+  isAutoAdded: boolean = false;
 
   get type() : string {
     return this._type;
@@ -98,6 +99,7 @@ export class Machine {
     r.fuel = this.fuel;
     r.modules = this.modules.map(m => new Module(m.type, r));
     r.count = this.count;
+    r.isAutoAdded = this.isAutoAdded;
     return r;
   }
 
@@ -107,6 +109,7 @@ export class Machine {
     this.fuel = "";
     this.modules = [];
     this.count = 1;
+    this.isAutoAdded = false;
   }
 
   static fromJson(data: any) : Machine {
@@ -117,6 +120,7 @@ export class Machine {
     r.fuel = data.fuel;
     r.countText = data.count.toString();
     r.modules = data.modules.map(m => new Module(m, r));
+    r.isAutoAdded = data.isAutoAdded;
     // console.log("r", r);
     return r;
   }
@@ -128,7 +132,8 @@ export class Machine {
       recipe: this.recipe,
       fuel: this.fuel,
       modules: this.modules.map(m => m.type),
-      count: this.count
+      count: this.count,
+      isAutoAdded: this.isAutoAdded
     };
   }
 

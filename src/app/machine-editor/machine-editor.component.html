@@ -1,5 +1,6 @@
 <div class="columns">
-  <div class="column sortableHandle sortableHandleColumn">↕</div>
+  <div class="column sortableHandle sortableHandleColumn" *ngIf="!machine.isAutoAdded">↕</div>
+  <div class="column sortableHandleColumn" *ngIf="machine.isAutoAdded"></div>
   <div class="column configColumn">
     <span *ngIf="machine.type === ''">
       <span class="label">Select type or recipe:</span>
@@ -62,7 +63,7 @@
     </div>
   </div>
   <div class="column deleteColumn">
-    <a class="delete is-medium" title="Remove machine" (click)="onDeleteRequested.emit()"></a>
+    <a class="delete is-medium" title="Remove machine" (click)="onDeleteRequested.emit()" *ngIf="!machine.isAutoAdded"></a>
   </div>
 
 </div>

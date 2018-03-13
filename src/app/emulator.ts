@@ -72,9 +72,14 @@ class Module {
 
 }
 
+export interface GlobalEmulatorResult {
+  totalInput: {[key: string]: number};
+  totalOutput: {[key: string]: number};
+
+}
 
 
-export function runEmulator(machines: Array<Machine>) : {[key: string]: number} {
+export function runEmulator(machines: Array<Machine>) : GlobalEmulatorResult {
 
   let modules = machines.map(m => new Module(m));
 
@@ -191,18 +196,25 @@ export function runEmulator(machines: Array<Machine>) : {[key: string]: number} 
   }
   let cache_speed = {};
   for(let i = 0; i < modules.length; i++) {
-    for(let item in modules[i].machine.emulatorResult.input || []) {
-      cache_speed[item] = (cache_speed[item] || 0) - modules[i].machine.maxInput[item];
-    }
-    for(let item in modules[i].machine.maxOutput || []) {
-      cache_speed[item] = (cache_speed[item] || 0) + modules[i].machine.maxOutput[item];
+    if (!modules[i].machine.isAutoAdded) {
+      for(let item in modules[i].machine.emulatorResult.input || []) {
+        cache_speed[item] = (cache_speed[item] || 0) - modules[i].machine.emulatorResult.input[item];
+      }
+      for(let item in modules[i].machine.emulatorResult.output || []) {
+        cache_speed[item] = (cache_speed[item] || 0) + modules[i].machine.emulatorResult.output[item];
+      }
     }
   }
+  let totalInput = {}, totalOutput = {};
   for(let item in cache_speed) {
     if (Math.abs(cache_speed[item]) < 0.1) {
       cache_speed[item] = 0;
+    } else if (cache_speed[item] > 0) {
+      totalOutput[item] = cache_speed[item];
+    } else {
+      totalInput[item] = -cache_speed[item];
     }
   }
-  return cache_speed;
+  return { totalInput: totalInput, totalOutput: totalOutput };
 }
 
