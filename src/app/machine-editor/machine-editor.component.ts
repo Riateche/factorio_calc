@@ -21,8 +21,8 @@ export class MachineEditorComponent implements OnInit {
     let gameData = GameData.current();
     this.allTypes = [
       DropdownOption.newTitle('Sources and sinks'),
-      new DropdownOption({ value: 'matter-source', icon: 'assets/icons/item-source.png' }),
-      new DropdownOption({ value: 'matter-sink', icon: 'assets/icons/item-void.png' }),
+      new DropdownOption({ value: 'matter-source', text: 'matter-source', icon: 'assets/icons/item-source.png' }),
+      new DropdownOption({ value: 'matter-sink', text: 'matter-sink', icon: 'assets/icons/item-void.png' }),
       this.createOption("electric-mining-drill"),
       this.createOption("burner-mining-drill"),
       DropdownOption.newSeparator(),
@@ -96,7 +96,11 @@ export class MachineEditorComponent implements OnInit {
       "productivity-module-2",
       "productivity-module-3"
     ].map(name => this.createOption(name));
-    //this.allModuleTypes.unshift(new DropdownOption({ value: "",  }))
+    this.allModuleTypes.unshift(new DropdownOption({
+      value: "",
+      text: "Empty",
+      icon: "assets/game_icons/slot-icon-module.png"
+    }));
 
   }
 
@@ -110,7 +114,11 @@ export class MachineEditorComponent implements OnInit {
     } else if ((new RegExp('^fill-.*-barrel$')).test(name)) {
       iconName = "barrel-fill";
     }
-    return new DropdownOption({ icon: `assets/game_icons/${iconName}.png`, value: name });
+    return new DropdownOption({
+      icon: `assets/game_icons/${iconName}.png`,
+      value: name,
+      text: name
+    });
   }
 
   hasAnyKey(value: any) {

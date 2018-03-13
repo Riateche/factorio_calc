@@ -3,6 +3,7 @@ import { Component, OnInit, ViewChild, ElementRef, ContentChild, Input, Output, 
 
 export class DropdownOption {
   value: string = "";
+  text: string = "";
   icon: string = "";
   is_separator: boolean = false;
   is_title: boolean = false;
@@ -16,7 +17,7 @@ export class DropdownOption {
     return new DropdownOption({ is_separator: true });
   }
   static newTitle(text: string) : DropdownOption {
-    return new DropdownOption({ is_title: true, value: text });
+    return new DropdownOption({ is_title: true, text: text });
   }
 }
 
@@ -35,8 +36,6 @@ export class DropdownComponent implements OnInit {
   @Output() valueChange: EventEmitter<String> = new EventEmitter<String>();
   currentText: string = "";
 
-
-
   constructor() {
   }
 
@@ -44,7 +43,6 @@ export class DropdownComponent implements OnInit {
   }
 
   openEditor() {
-    console.log("value at openEditor: ", this.value);
     this.is_active = true;
     this.currentText = "";
     setTimeout(() => this.inputElement.nativeElement.focus(), 100);
@@ -56,18 +54,14 @@ export class DropdownComponent implements OnInit {
   }
 
   confirm() {
-    if (this.currentText.length === 0) {
-      this.value = "";
-    } else {
-      let option = this.options.find(option => option.value.indexOf(this.currentText) !== -1);
-      if (option) {
-        this.value = option.value;
-      } else {
-        this.value = this.currentText;
-      }
+    let option = this.firstMatchingOption();
+    if (option) {
+      this.setCurrentOption(option);
     }
-    this.valueChange.emit(this.value);
-    this.cancel();
+  }
+
+  firstMatchingOption() {
+    return this.options.find(option => option.text.indexOf(this.currentText) !== -1);
   }
 
   setCurrentOption(option: DropdownOption) {
@@ -84,8 +78,11 @@ export class DropdownComponent implements OnInit {
     return this.options.filter(
       option => option.is_separator || option.is_title || option.value.indexOf(this.currentText) !== -1);
   }
+  currentOption() : DropdownOption {
+    return this.options.find(option => option.value == this.value && !option.is_separator && !option.is_title);
+  }
   currentIcon() : string {
-    let option = this.options.find(option => option.value == this.value);
+    let option = this.currentOption();
     if (option) {
       return option.icon;
     } else {
@@ -103,8 +100,9 @@ export class DropdownComponent implements OnInit {
   }
 
   valueText() {
-    if (this.value.length > 0) {
-      return this.showIconOnly ? "" : this.value;
+    let option = this.currentOption();
+    if (option) {
+      return this.showIconOnly ? "" : option.text;
     } else {
       return this.placeholder;
     }

@@ -18,7 +18,7 @@
         <span *ngIf="machine.modules.length > 0">
           <span class="label">Modules:</span>
           <span *ngFor="let module of machine.modules">
-            <dropdown [options]="allModuleTypes" [(value)]="module.type" placeholder="–" showIconOnly="true"></dropdown>
+            <dropdown [options]="allModuleTypes" [(value)]="module.type" showIconOnly="true"></dropdown>
           </span>
         </span>
       </div>
