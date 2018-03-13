@@ -61,7 +61,7 @@ export class DropdownComponent implements OnInit {
   }
 
   firstMatchingOption() {
-    return this.options.find(option => option.text.indexOf(this.currentText) !== -1);
+    return this.options.find(option => option.text.toLowerCase().indexOf(this.currentText.toLowerCase()) !== -1);
   }
 
   setCurrentOption(option: DropdownOption) {
@@ -72,11 +72,11 @@ export class DropdownComponent implements OnInit {
   }
 
   visibleOptions(): Array<DropdownOption> {
-    if (!this.options.find(option => option.value.indexOf(this.currentText) !== -1 && !option.is_title)) {
+    if (!this.options.find(option => option.text.toLowerCase().indexOf(this.currentText.toLowerCase()) !== -1 && !option.is_title)) {
       return [];
     }
     return this.options.filter(
-      option => option.is_separator || option.is_title || option.value.indexOf(this.currentText) !== -1);
+      option => option.is_separator || option.is_title || option.text.toLowerCase().indexOf(this.currentText.toLowerCase()) !== -1);
   }
   currentOption() : DropdownOption {
     return this.options.find(option => option.value == this.value && !option.is_separator && !option.is_title);
@@ -103,8 +103,10 @@ export class DropdownComponent implements OnInit {
     let option = this.currentOption();
     if (option) {
       return this.showIconOnly ? "" : option.text;
-    } else {
+    } else if (this.value === "") {
       return this.placeholder;
+    } else {
+      return this.value;
     }
   }
 }

@@ -5,51 +5,12 @@ import { EmulatorResult } from "./emulator"
   the given `energy` consumption (in MW).
 */
 function calcBurnerInput(fuel: string, energy: number): number {
-  let fuelValue = {
-    // MJ per item
-    "coal": 8,
-    "solid-fuel": 25,
-    "rocket-fuel": 225,
-    "nuclear-fuel": 1210,
-    "raw-wood": 4,
-    "wood": 2,
-    "small-electric-pole": 4,
-    "wooden-chest": 4
-  }[fuel];
+  let fuelValue = GameData.current().fuelValues[fuel];
   if (!fuelValue) {
-    console.log("error: unknown fuel type");
-    return 0;
+    throw new Error("unknown fuel type");
   }
   return energy / fuelValue;
 }
-
-let supportedTypes: Array<string> = [
-  "matter-source",
-  "matter-sink",
-  "electric-mining-drill",
-  "burner-mining-drill",
-  "assembling-machine-1",
-  "assembling-machine-2",
-  "assembling-machine-3",
-  "stone-furnace",
-  "steel-furnace",
-  "electric-furnace",
-  "oil-refinery",
-  "chemical-plant",
-  "centrifuge",
-  "rocket-silo"
-];
-
-export let recipeCategoryToMachineTypes = {
-  "crafting": ["assembling-machine-1", "assembling-machine-2", "assembling-machine-3"],
-  "crafting-with-fluid": ["assembling-machine-1", "assembling-machine-2", "assembling-machine-3"],
-  "advanced-crafting": ["assembling-machine-1", "assembling-machine-2", "assembling-machine-3"],
-  "chemistry": ["chemical-plant"],
-  "oil-processing": ["oil-refinery"],
-  "rocket-building": ["rocket-silo"],
-  "smelting": ["stone-furnace", "steel-furnace", "electric-furnace"],
-  "centrifuging": ["centrifuge"]
-};
 
 class Module {
   private _type: string = "";
@@ -78,6 +39,7 @@ export class Machine {
   maxInput: any = {};
   maxOutput: any = {};
   emulatorResult: EmulatorResult;
+  errorString: string = "";
 
   get type() : string {
     return this._type;
@@ -172,7 +134,7 @@ export class Machine {
 
   setTypeOrRecipe(typeOrRecipe: string) {
     this.clear();
-    if (supportedTypes.indexOf(typeOrRecipe) !== -1) {
+    if (GameData.current().machineTypes.indexOf(typeOrRecipe) !== -1) {
       this.type = typeOrRecipe;
     } else {
       let recipe = GameData.current().recipes.find(recipe => recipe.name == typeOrRecipe);
@@ -180,11 +142,11 @@ export class Machine {
         this.type = "matter-source";
         this.recipe = typeOrRecipe;
       } else {
-        if (!recipeCategoryToMachineTypes[recipe.category]) {
+        if (!GameData.current().recipeCategoryToMachineTypes[recipe.category]) {
           alert("Unknown recipe category");
           return;
         }
-        this.type = recipeCategoryToMachineTypes[recipe.category][0];
+        this.type = GameData.current().recipeCategoryToMachineTypes[recipe.category][0];
         this.recipe = typeOrRecipe;
       }
     }
@@ -233,154 +195,167 @@ export class Machine {
   }
 
   updateProperties() {
-    this.maxInput = {};
-    this.maxOutput = {};
-    if (this.type == "matter-source") {
-      if (this.recipe !== "") {
-        this.maxOutput[this.recipe] = 1;
-      }
-    } else if (this.type == "matter-sink") {
-      if (this.recipe !== "") {
-        this.maxInput[this.recipe] = 1;
-      }
-    } else if (this.type == "electric-mining-drill") {
-      let speed = {
-        "iron-ore": 0.525,
-        "copper-ore": 0.525,
-        "coal": 0.525,
-        "stone": 0.65,
-        "uranium-ore": 0.2625
-      }[this.recipe];
-      if (!speed) {
-        console.log("error: unknown drill target");
-        return;
-      }
-      this.maxOutput[this.recipe] = speed;
-      if (this.recipe == "uranium-ore") {
-        this.maxInput["sulfuric-acid"] = 0.2625;
-      }
-      this.maxInput["MW"] = 0.09;
-    } else if (this.type == "burner-mining-drill") {
-      let speed = {
-        "iron-ore": 0.28,
-        "copper-ore": 0.28,
-        "coal": 0.28,
-        "stone": 0.3675,
-      }[this.recipe];
-      if (!speed) {
-        console.log("error: unknown drill target");
-        return;
-      }
-      this.maxOutput[this.recipe] = speed;
-      this.maxInput[this.fuel] = calcBurnerInput(this.fuel, 0.3);
-    } else { // crafting machines
-      let recipe = GameData.current().recipes.find(recipe => recipe.name == this.recipe);
-      if (!recipe) {
-        console.log("recipe not found");
-        return;
-      }
-      var machine_speed = {
-        "assembling-machine-1": 0.5,
-        "assembling-machine-2": 0.75,
-        "assembling-machine-3": 1.25,
-        "oil-refinery": 1,
-        "chemical-plant": 1.25,
-        "stone-furnace": 1,
-        "steel-furnace": 2,
-        "electric-furnace": 2,
-        "centrifuge": 0.75,
-        "rocket-silo": 1
-      }[this.type];
-
-      this.maxInput["MW"] = {
-        "assembling-machine-1": 0.09,
-        "assembling-machine-2": 0.15,
-        "assembling-machine-3": 0.21,
-        "oil-refinery": 0.42,
-        "chemical-plant": 0.21,
-        "stone-furnace": 0,
-        "steel-furnace": 0,
-        "electric-furnace": 0.18,
-        "centrifuge": 0.35,
-        "rocket-silo": 4
-      }[this.type];
-      if (this.type == "stone-furnace" || this.type == "steel-furnace") {
-        this.maxInput[this.fuel] = calcBurnerInput(this.fuel, 0.18);
-      }
-      let speed = machine_speed / recipe.energy;
-      for(let j = 0; j < recipe.ingredients.length; j++) {
-        let item = recipe.ingredients[j].name;
-        let count = recipe.ingredients[j].amount;
-        this.maxInput[item] = count * speed;
-      }
-      for(let j = 0; j < recipe.products.length; j++) {
-        let product = recipe.products[j];
-        let item = product.name;
-        let count;
-        if (product.probability) {
-          count = product.probability * product.amount_max;
-        } else {
-          count = product.amount;
+    this.errorString = "";
+    try {
+      this.maxInput = {};
+      this.maxOutput = {};
+      if (this.type == "matter-source") {
+        if (this.recipe !== "") {
+          this.maxOutput[this.recipe] = 1;
         }
-        this.maxOutput[item] = count * speed;
-      }
-    }
+      } else if (this.type == "matter-sink") {
+        if (this.recipe !== "") {
+          this.maxInput[this.recipe] = 1;
+        }
+      } else if (this.type == "electric-mining-drill") {
+        let speed = {
+          "iron-ore": 0.525,
+          "copper-ore": 0.525,
+          "coal": 0.525,
+          "stone": 0.65,
+          "uranium-ore": 0.2625
+        }[this.recipe];
+        if (!speed) {
+          console.log("error: unknown drill target");
+          return;
+        }
+        this.maxOutput[this.recipe] = speed;
+        if (this.recipe == "uranium-ore") {
+          this.maxInput["sulfuric-acid"] = 0.2625;
+        }
+        this.maxInput["MW"] = 0.09;
+      } else if (this.type == "burner-mining-drill") {
+        let speed = {
+          "iron-ore": 0.28,
+          "copper-ore": 0.28,
+          "coal": 0.28,
+          "stone": 0.3675,
+        }[this.recipe];
+        if (!speed) {
+          throw new Error("unknown drill target");
+        }
+        this.maxOutput[this.recipe] = speed;
+        if (this.fuel === "") {
+          throw new Error("fuel not set");
+        }
+        this.maxInput[this.fuel] = calcBurnerInput(this.fuel, 0.3);
+      } else { // crafting machines
+        if (this.recipe === '') {
+          throw new Error(`recipe not set`);
+        }
+        let recipe = GameData.current().recipes.find(recipe => recipe.name == this.recipe);
+        if (!recipe) {
+          throw new Error(`recipe "${this.recipe}" not found`);
+        }
+        if (GameData.current().recipeCategoryToMachineTypes[recipe.category].indexOf(this.type) === -1) {
+          throw new Error(`wrong machine type for recipe "${this.recipe}"`);
+        }
+        var machine_speed = {
+          "assembling-machine-1": 0.5,
+          "assembling-machine-2": 0.75,
+          "assembling-machine-3": 1.25,
+          "oil-refinery": 1,
+          "chemical-plant": 1.25,
+          "stone-furnace": 1,
+          "steel-furnace": 2,
+          "electric-furnace": 2,
+          "centrifuge": 0.75,
+          "rocket-silo": 1
+        }[this.type];
 
-    let speedCoef = 1;
-    let productivityCoef = 1;
-    let energyConsumptionCoef = 1;
-
-    for(let module of this.modules) {
-      switch(module.type) {
-        case "":
-          break;
-        case "speed-module":
-          speedCoef += 0.2;
-          energyConsumptionCoef += 0.5;
-          break;
-        case "speed-module-2":
-          speedCoef += 0.3;
-          energyConsumptionCoef += 0.6;
-          break;
-        case "speed-module-3":
-          speedCoef += 0.5;
-          energyConsumptionCoef += 0.7;
-          break;
-        case "effectivity-module":
-          energyConsumptionCoef -= 0.3;
-          break;
-        case "effectivity-module-2":
-          energyConsumptionCoef -= 0.4;
-          break;
-        case "effectivity-module-3":
-          energyConsumptionCoef -= 0.5;
-          break;
-        case "productivity-module":
-          productivityCoef += 0.04;
-          break;
-        case "productivity-module-2":
-          productivityCoef += 0.06;
-          break;
-        case "productivity-module-3":
-          productivityCoef += 0.1;
-          break;
+        this.maxInput["MW"] = {
+          "assembling-machine-1": 0.09,
+          "assembling-machine-2": 0.15,
+          "assembling-machine-3": 0.21,
+          "oil-refinery": 0.42,
+          "chemical-plant": 0.21,
+          "stone-furnace": 0,
+          "steel-furnace": 0,
+          "electric-furnace": 0.18,
+          "centrifuge": 0.35,
+          "rocket-silo": 4
+        }[this.type];
+        if (this.type == "stone-furnace" || this.type == "steel-furnace") {
+            if (this.fuel === "") {
+              throw new Error("fuel not set");
+            }
+            this.maxInput[this.fuel] = calcBurnerInput(this.fuel, 0.18);
+        }
+        let speed = machine_speed / recipe.energy;
+        for(let j = 0; j < recipe.ingredients.length; j++) {
+          let item = recipe.ingredients[j].name;
+          let count = recipe.ingredients[j].amount;
+          this.maxInput[item] = count * speed;
+        }
+        for(let j = 0; j < recipe.products.length; j++) {
+          let product = recipe.products[j];
+          let item = product.name;
+          let count;
+          if (product.probability) {
+            count = product.probability * product.amount_max;
+          } else {
+            count = product.amount;
+          }
+          this.maxOutput[item] = count * speed;
+        }
       }
-    }
-    if (energyConsumptionCoef < 0.2) {
-      energyConsumptionCoef = 0.2;
-    }
-    //console.log("ok4", speedCoef, productivityCoef, energyConsumptionCoef, this.modules);
 
-    for(let key in this.maxInput) {
-      if (key === "MW") {
-        this.maxInput[key] *= this.count * energyConsumptionCoef;
-      } else {
-        this.maxInput[key] *= this.count * speedCoef;
+      let speedCoef = 1;
+      let productivityCoef = 1;
+      let energyConsumptionCoef = 1;
+
+      for(let module of this.modules) {
+        switch(module.type) {
+          case "":
+            break;
+          case "speed-module":
+            speedCoef += 0.2;
+            energyConsumptionCoef += 0.5;
+            break;
+          case "speed-module-2":
+            speedCoef += 0.3;
+            energyConsumptionCoef += 0.6;
+            break;
+          case "speed-module-3":
+            speedCoef += 0.5;
+            energyConsumptionCoef += 0.7;
+            break;
+          case "effectivity-module":
+            energyConsumptionCoef -= 0.3;
+            break;
+          case "effectivity-module-2":
+            energyConsumptionCoef -= 0.4;
+            break;
+          case "effectivity-module-3":
+            energyConsumptionCoef -= 0.5;
+            break;
+          case "productivity-module":
+            productivityCoef += 0.04;
+            break;
+          case "productivity-module-2":
+            productivityCoef += 0.06;
+            break;
+          case "productivity-module-3":
+            productivityCoef += 0.1;
+            break;
+        }
       }
+      if (energyConsumptionCoef < 0.2) {
+        energyConsumptionCoef = 0.2;
+      }
+
+      for(let key in this.maxInput) {
+        if (key === "MW") {
+          this.maxInput[key] *= this.count * energyConsumptionCoef;
+        } else {
+          this.maxInput[key] *= this.count * speedCoef;
+        }
+      }
+      for(let key in this.maxOutput) {
+        this.maxOutput[key] *= this.count * speedCoef * productivityCoef;
+      }
+    } catch(e) {
+      this.errorString = (e as Error).message;
     }
-    for(let key in this.maxOutput) {
-      this.maxOutput[key] *= this.count * speedCoef * productivityCoef;
-    }
-    // console.log("after updateproperties: input", this.maxInput, "output", this.maxOutput);
   }
 }

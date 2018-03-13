@@ -13,3 +13,6 @@
 .input.machineCount {
   width: 50px;
 }
+.errorString {
+  color: red;
+}

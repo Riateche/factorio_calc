@@ -1,5 +1,5 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
-import { Machine, recipeCategoryToMachineTypes } from '../machine';
+import { Machine } from '../machine';
 import { DropdownOption } from '../dropdown/dropdown.component';
 import { GameData } from '../game-data';
 @Component({
@@ -20,11 +20,9 @@ export class MachineEditorComponent implements OnInit {
   constructor() {
     let gameData = GameData.current();
     this.allTypes = [
-      DropdownOption.newTitle('Sources and sinks'),
-      new DropdownOption({ value: 'matter-source', text: 'matter-source', icon: 'assets/icons/item-source.png' }),
-      new DropdownOption({ value: 'matter-sink', text: 'matter-sink', icon: 'assets/icons/item-void.png' }),
-      this.createOption("electric-mining-drill"),
-      this.createOption("burner-mining-drill"),
+      DropdownOption.newTitle('Creative'),
+      this.createOption("matter-source"),
+      this.createOption("matter-sink"),
       DropdownOption.newSeparator(),
       DropdownOption.newTitle('Crafting machines'),
       this.createOption("assembling-machine-1"),
@@ -36,7 +34,10 @@ export class MachineEditorComponent implements OnInit {
       this.createOption("oil-refinery"),
       this.createOption("chemical-plant"),
       this.createOption("centrifuge"),
-      this.createOption("rocket-silo")
+      this.createOption("rocket-silo"),
+      DropdownOption.newTitle('Drills'),
+      this.createOption("electric-mining-drill"),
+      this.createOption("burner-mining-drill")
     ];
     this.allTypesAndRecipes = this.allTypes.concat(
       DropdownOption.newSeparator(),
@@ -44,34 +45,19 @@ export class MachineEditorComponent implements OnInit {
     );
     for (let recipe of gameData.recipes) {
       this.allTypesAndRecipes.push(this.createOption(recipe.name));
-      let machines = recipeCategoryToMachineTypes[recipe.category];
-      for(let machine of machines) {
-        this.recipesPerType[machine] = this.recipesPerType[machine] || [];
-        this.recipesPerType[machine].push(this.createOption(recipe.name));
-      }
-
     }
+    for(let machine of gameData.machineTypes) {
+      this.recipesPerType[machine] = gameData.recipesPerMachineType[machine]
+        .map(item => this.createOption(item));
+    }
+
+
     this.allTypesAndRecipes.push(DropdownOption.newTitle('Resources'));
     for(let item of gameData.allItemsNotRecipeNames) {
       this.allTypesAndRecipes.push(this.createOption(item));
     }
-    this.allTypesAndRecipes.push(this.createOption("MW"));
 
-    let allItems = [];
-    for(let item of gameData.allItems) {
-      allItems.push(this.createOption(item));
-    }
-    allItems.push(this.createOption("MW"));
-    this.recipesPerType["matter-source"] = allItems;
-    this.recipesPerType["matter-sink"] = allItems;
-    this.recipesPerType["electric-mining-drill"] =
-      [ "iron-ore", "copper-ore", "coal", "stone", "uranium-ore"]
-      .map(item => this.createOption(item));
-    this.recipesPerType["burner-mining-drill"] =
-      [ "iron-ore", "copper-ore", "coal", "stone"]
-      .map(item => this.createOption(item));
-
-
+    //let allItems = gameData.allItems.map(item => this.createOption(item));
 
 
     this.allFuelTypes = [

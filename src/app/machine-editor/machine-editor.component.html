@@ -25,6 +25,9 @@
     </span>
   </div>
   <div class="column">
+    <div class="errorString" *ngIf="machine.errorString !== ''">
+      {{machine.errorString}}
+    </div>
     <span class="label">In:</span>
     <items-speed [value]="machine.maxInput"></items-speed>
     <span *ngIf="!hasAnyKey(machine.maxInput)">–</span>
