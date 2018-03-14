@@ -118,7 +118,6 @@ export class Machine {
     r.fuel = data.fuel;
     r.countText = data.count.toString();
     r.modules = data.modules.map(m => new Module(m, r));
-    r.isAutoAdded = data.isAutoAdded;
     return r;
   }
 
@@ -128,8 +127,7 @@ export class Machine {
       recipe: this.recipe,
       fuel: this.fuel,
       modules: this.modules.map(m => m.type),
-      count: this.count,
-      isAutoAdded: this.isAutoAdded
+      count: this.count
     };
   }
 
@@ -193,6 +191,18 @@ export class Machine {
       this.modules.push(new Module("", this));
     }
     this.modules = this.modules.slice(0, targetCount);
+  }
+
+  recommendedCount() {
+    if (!this.emulatorResult || this.isAutoAdded) {
+      return null;
+    }
+    let r = Math.ceil(this.count * this.emulatorResult.load - 0.01);
+    if (r < this.count) {
+      return r;
+    } else {
+      return null;
+    }
   }
 
   updateProperties() {

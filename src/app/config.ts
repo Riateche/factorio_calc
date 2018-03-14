@@ -29,7 +29,7 @@ export class Config {
     return {
       name: this.name,
       title: this.title,
-      machines: this.machines.map(m => m.toJson()),
+      machines: this.machines.filter(m => !m.isAutoAdded).map(m => m.toJson()),
     };
   }
 

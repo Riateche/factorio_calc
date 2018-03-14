@@ -43,10 +43,24 @@ export class ConfigEditorComponent implements OnInit {
   }
 
   addMachine() {
-    this.config.machines.push(new Machine());
+    let machine = new Machine();
+    let firstAutoSource = this.firstAutoSource();
+    if (firstAutoSource) {
+      let index = this.config.machines.indexOf(firstAutoSource);
+      this.config.machines.splice(index, 0, machine);
+    } else {
+      this.config.machines.push(machine);
+    }
   }
   deleteMachine(machine: Machine) {
     if (!confirm("Delete this machine?")) { return; }
     this.config.machines.splice(this.config.machines.indexOf(machine), 1);
+  }
+
+  firstAutoSource() {
+    return this.config.machines.find(m => m.isAutoAdded && m.type == "matter-source");
+  }
+  firstAutoSink() {
+    return this.config.machines.find(m => m.isAutoAdded && m.type == "matter-sink");
   }
 }

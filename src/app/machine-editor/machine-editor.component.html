@@ -1,5 +1,7 @@
 <div class="columns">
-  <div class="column sortableHandle sortableHandleColumn" *ngIf="!machine.isAutoAdded">↕</div>
+  <div class="column sortableHandle sortableHandleColumn" *ngIf="!machine.isAutoAdded">
+    ↕
+  </div>
   <div class="column sortableHandleColumn" *ngIf="machine.isAutoAdded"></div>
   <div class="column configColumn">
     <span *ngIf="machine.type === ''">
@@ -40,14 +42,19 @@
   <div class="column">
     <div *ngIf="machine.emulatorResult">
       {{machine.emulatorResult.load * 100 | number: '1.0-0' }}%
+      <span *ngIf="machine.recommendedCount()">
+        <a (click)="setRecommendedCount()">(set count to {{machine.recommendedCount()}}</a>)
+      </span>
       <br>
       <span *ngIf="hasAnyKey(machine.emulatorResult.inputFails)">
         <span class="label">Input fails:</span>
         <items-speed [value]="machine.emulatorResult.inputFails" fractionMode="true"></items-speed>
+        <br>
       </span>
       <span *ngIf="hasAnyKey(machine.emulatorResult.outputFails)">
         <span class="label">Output fails:</span>
         <items-speed [value]="machine.emulatorResult.outputFails" fractionMode="true"></items-speed>
+        <br>
       </span>
     </div>
   </div>

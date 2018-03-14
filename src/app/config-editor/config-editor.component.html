@@ -1,6 +1,6 @@
 
 
-<div *ngIf="config" class="root">
+<div *ngIf="config" class="root configEditor">
 
   <h1 class="title">Editing config</h1>
 
@@ -50,17 +50,37 @@
   </div>
   <div [sortablejs]="config.machines">
     <div *ngFor="let machine of config.machines" class="machineContainer">
-      <machine-editor [machine]="machine" (onDeleteRequested)="deleteMachine(machine)"></machine-editor>
+      <div class="columns tableSubHeader" *ngIf="machine === firstAutoSource()">
+        <div class="column sortableHandleColumn"></div>
+        <div class="column">Auto sources:</div>
+      </div>
+      <div class="columns tableSubHeader" *ngIf="machine === firstAutoSink()">
+          <div class="column sortableHandleColumn"></div>
+          <div class="column">Auto sinks:</div>
+        </div>
+        <machine-editor [machine]="machine" (onDeleteRequested)="deleteMachine(machine)"></machine-editor>
     </div>
   </div>
 
-  <div *ngIf="config.emulatorResult" class="totalIO">
-    <span class="label">Total input:</span>
-    <items-speed [value]="config.emulatorResult.totalInput"></items-speed>
-    &nbsp;&nbsp;&nbsp;
-    <span class="label">Total output:</span>
-    <items-speed [value]="config.emulatorResult.totalOutput"></items-speed>
+  <div class="columns" *ngIf="config.emulatorResult">
+    <div class="column sortableHandleColumn"></div>
+    <div class="column configColumn">
+      Total
+    </div>
+    <div class="column">
+    </div>
+    <div class="column">
+    </div>
+    <div class="column">
+      <span class="label">In:</span>
+      <items-speed [value]="config.emulatorResult.totalInput"></items-speed>
+      <br>
+      <span class="label">Out:</span>
+      <items-speed [value]="config.emulatorResult.totalOutput"></items-speed>
+    </div>
+    <div class="column deleteColumn"></div>
   </div>
+
 
   <div class="field is-grouped">
     <p class="control">
