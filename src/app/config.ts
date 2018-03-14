@@ -18,11 +18,21 @@ export class Config {
     return r;
   }
 
+  copyFrom(other: Config) {
+    this.title = other.title;
+    this.machines = other.machines.map(m => m.clone());
+    this.emulatorResult = null;
+  }
   static fromJson(data: any) : Config {
-    var r = new Config(data.name);
-    r.title = data.title;
-    r.machines = data.machines.map(m => Machine.fromJson(m));
+    var r = new Config();
+    r.setFromJson(data);
     return r;
+  }
+
+  setFromJson(data: any) {
+    this.name = data.name;
+    this.title = data.title;
+    this.machines = data.machines.map(m => Machine.fromJson(m));
   }
 
   toJson() : any {
@@ -84,6 +94,13 @@ export class Config {
 
 
 
+  }
+
+  get jsonContent() : string {
+    return JSON.stringify(this.toJson());
+  }
+  set jsonContent(v: string) {
+    this.setFromJson(JSON.parse(v));
   }
 
 

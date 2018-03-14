@@ -12,6 +12,7 @@ interface ItemBufferConfig {
 
 export interface EmulatorResult {
   load: number;
+  recommendedCount: number;
   inputFails: {[key: string]: number};
   outputFails: {[key: string]: number};
   input: {[key: string]: number};
@@ -164,6 +165,7 @@ export function runEmulator(machines: Array<Machine>) : GlobalEmulatorResult {
   for(let i = 0; i < modules.length; i++) {
     let result = {
       load: modules[i].cycles / (total_cycles - starting_cycle),
+      recommendedCount: null,
       inputFails: {},
       outputFails: {},
       input: {},
@@ -183,6 +185,16 @@ export function runEmulator(machines: Array<Machine>) : GlobalEmulatorResult {
     for(let item in modules[i].machine.maxOutput) {
       result.output[item] = result.load * modules[i].machine.maxOutput[item];
     }
+    if (modules[i].machine.type !== "matter-source" &&
+        modules[i].machine.type !== "matter-sink")
+    {
+      let realCount = Math.ceil(modules[i].machine.count * result.load - 0.01);
+      if (realCount < modules[i].machine.count) {
+        result.recommendedCount = realCount;
+      }
+    }
+
+
     modules[i].machine.emulatorResult = result;
   }
   let cache_speed = {};

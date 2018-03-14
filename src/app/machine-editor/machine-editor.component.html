@@ -62,8 +62,8 @@
   <div class="column">
     <div *ngIf="machine.emulatorResult">
       {{machine.emulatorResult.load * 100 | number: '1.0-0' }}%
-      <span *ngIf="machine.recommendedCount()">
-        <a (click)="setRecommendedCount()">(set count to {{machine.recommendedCount()}}</a>)
+      <span *ngIf="machine.emulatorResult.recommendedCount">
+        <a (click)="setRecommendedCount()">(set count to {{machine.emulatorResult.recommendedCount}}</a>)
       </span>
       <br>
       <span *ngIf="hasAnyKey(machine.emulatorResult.inputFails)">

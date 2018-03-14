@@ -41,8 +41,7 @@ export class MachineEditorComponent implements OnInit {
   }
 
   setRecommendedCount() {
-    this.machine.count = this.machine.recommendedCount();
-    this.machine.emulatorResult = null;
+    this.machine.count = this.machine.emulatorResult.recommendedCount;
   }
 
   allReplaceOptions() {

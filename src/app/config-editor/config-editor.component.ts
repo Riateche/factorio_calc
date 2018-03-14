@@ -14,6 +14,11 @@ import { Machine } from '../machine';
 export class ConfigEditorComponent implements OnInit {
   originalConfigName: string
   config: Config
+  showJsonContent: boolean = false;
+
+  toggleJsonContent() {
+    this.showJsonContent = !this.showJsonContent;
+  }
 
   constructor(private route: ActivatedRoute, private configService: ConfigService, private router: Router, private routes: RouteService) { }
 
@@ -62,5 +67,12 @@ export class ConfigEditorComponent implements OnInit {
   }
   firstAutoSink() {
     return this.config.machines.find(m => m.isAutoAdded && m.type == "matter-sink");
+  }
+  duplicate() {
+    let newConfig = this.configService.newConfig();
+    newConfig.copyFrom(this.config);
+    newConfig.title = `${this.config.title} (copy)`;
+    this.configService.updateConfig(newConfig.name, newConfig);
+    alert("Copy saved.");
   }
 }
