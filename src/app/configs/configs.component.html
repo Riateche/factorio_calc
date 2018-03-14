@@ -7,8 +7,14 @@
       {{config.displayName()}}
     </a>
     <div class="panel-block">
-      <button class="button is-primary" (click)="addConfig()">Add config</button>
+      <div class="field is-grouped">
+        <p class="control">
+          <button class="button is-primary" (click)="addConfig()">Add config</button>
+        </p>
+        <p class="control">
+          <button class="button" [routerLink]="routes.settings()">Settings</button>
+        </p>
+      </div>
     </div>
   </nav>
 </div>
-

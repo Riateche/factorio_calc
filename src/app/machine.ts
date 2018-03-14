@@ -1,5 +1,6 @@
 import { GameData } from "./game-data";
 import { EmulatorResult } from "./emulator"
+import { Settings } from "./config.service";
 
 /*! Returns number of items of `fuel` per second required to satisfy
   the given `energy` consumption (in MW).
@@ -37,6 +38,7 @@ export class Machine {
   private _countText: string = "1";
   maxInput: any = {};
   maxOutput: any = {};
+  globalSettings: Settings;
   emulatorResult: EmulatorResult;
   errorString: string = "";
   isAutoAdded: boolean = false;
@@ -131,29 +133,6 @@ export class Machine {
     };
   }
 
-  setTypeOrRecipe(typeOrRecipe: string) {
-    this.clear();
-    if (GameData.current().machineTypes.indexOf(typeOrRecipe) !== -1) {
-      this.type = typeOrRecipe;
-    } else {
-      let recipe = GameData.current().recipes.find(recipe => recipe.name == typeOrRecipe);
-      if (!recipe) {
-        if (GameData.current().recipesPerMachineType["electric-mining-drill"].indexOf(typeOrRecipe) !== -1) {
-          this.type = "electric-mining-drill";
-        } else {
-          this.type = "matter-source";
-        }
-        this.recipe = typeOrRecipe;
-      } else {
-        if (!GameData.current().recipeCategoryToMachineTypes[recipe.category]) {
-          alert("Unknown recipe category");
-          return;
-        }
-        this.type = GameData.current().recipeCategoryToMachineTypes[recipe.category][0];
-        this.recipe = typeOrRecipe;
-      }
-    }
-  }
 
   hasFuel() : boolean {
     return this.type == "burner-mining-drill" ||
@@ -360,6 +339,9 @@ export class Machine {
       if (energyConsumptionCoef < 0.2) {
         energyConsumptionCoef = 0.2;
       }
+      if (this.globalSettings) {
+        productivityCoef += (this.globalSettings.miningProductivity - 100) / 100;
+      }
 
       for(let key in this.maxInput) {
         if (key === "MW") {
@@ -367,6 +349,9 @@ export class Machine {
         } else {
           this.maxInput[key] *= this.count * speedCoef;
         }
+      }
+      if (this.globalSettings && !this.globalSettings.generateMWInputs) {
+        delete this.maxInput["MW"];
       }
       for(let key in this.maxOutput) {
         this.maxOutput[key] *= this.count * speedCoef * productivityCoef;

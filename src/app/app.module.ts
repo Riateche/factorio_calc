@@ -13,6 +13,8 @@ import { SortablejsModule } from 'angular-sortablejs';
 import { TempComponent } from './temp/temp.component';
 import { DropdownComponent } from './dropdown/dropdown.component';
 import { ItemsSpeedComponent } from './items-speed/items-speed.component';
+import { SettingsComponent } from './settings/settings.component';
+import { DropdownListsService } from './dropdown-lists.service';
 
 @NgModule({
   declarations: [
@@ -22,7 +24,8 @@ import { ItemsSpeedComponent } from './items-speed/items-speed.component';
     MachineEditorComponent,
     TempComponent,
     DropdownComponent,
-    ItemsSpeedComponent
+    ItemsSpeedComponent,
+    SettingsComponent
   ],
   imports: [
     BrowserModule,
@@ -30,7 +33,7 @@ import { ItemsSpeedComponent } from './items-speed/items-speed.component';
     AppRoutingModule,
     SortablejsModule.forRoot({ animation: 200, handle: ".sortableHandle" })
   ],
-  providers: [ConfigService],
+  providers: [ConfigService, DropdownListsService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

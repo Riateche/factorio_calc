@@ -16,5 +16,9 @@ export class RouteService {
   configs() {
     return '/';
   }
+  static SETTINGS_ROUTE = 'settings';
+  settings () {
+    return '/settings';
+  }
 
 }

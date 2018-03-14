@@ -1,0 +1,100 @@
+<div class="container">
+  <h1 class="title">Settings</h1>
+
+  <div class="field is-horizontal">
+    <div class="field-label is-normal">
+      <label class="label">Default assembler</label>
+    </div>
+    <div class="field-body">
+      <div class="field">
+        <div class="control">
+          <dropdown [options]="dropdownLists.allAssemblers" [(value)]="settings.defaultAssembler"></dropdown>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="field is-horizontal">
+      <div class="field-label is-normal">
+        <label class="label">Default furnace</label>
+      </div>
+      <div class="field-body">
+        <div class="field">
+          <div class="control">
+            <dropdown [options]="dropdownLists.allFurnaces" [(value)]="settings.defaultFurnace"></dropdown>
+          </div>
+        </div>
+      </div>
+    </div>
+  <div class="field is-horizontal">
+      <div class="field-label is-normal">
+        <label class="label">Default drill</label>
+      </div>
+      <div class="field-body">
+        <div class="field">
+          <div class="control">
+            <dropdown [options]="dropdownLists.allDrills" [(value)]="settings.defaultDrill"></dropdown>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="field is-horizontal">
+        <div class="field-label is-normal">
+          <label class="label">Default fuel</label>
+        </div>
+        <div class="field-body">
+          <div class="field">
+            <div class="control">
+              <dropdown [options]="dropdownLists.allFuelTypes" [(value)]="settings.defaultFuel"></dropdown>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="field is-horizontal">
+          <div class="field-label is-normal">
+          </div>
+          <div class="field-body">
+            <div class="field">
+              <div class="control">
+                  <label class="checkbox">
+                      <input type="checkbox" [(ngModel)]="settings.generateMWInputs">
+                      Generate MW (energy) inputs
+                    </label>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="field is-horizontal">
+            <div class="field-label is-normal">
+              <label class="label">Mining productivity (%)</label>
+            </div>
+            <div class="field-body">
+              <div class="field">
+                <div class="control">
+                    <input type="text" class="input" [(ngModel)]="settings.miningProductivity">
+                </div>
+              </div>
+            </div>
+          </div>
+
+      <div class="field is-horizontal">
+          <div class="field-label is-normal">
+            <label class="label">Game version</label>
+          </div>
+          <div class="field-body">
+            <div class="field">
+              <div class="control">
+                <dropdown [options]="dropdownLists.allGameVersions" [(value)]="settings.gameVersion"></dropdown>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="field is-grouped">
+    <p class="control">
+      <button class="button is-primary" (click)="save()">Save</button>
+    </p>
+    <p class="control">
+      <button class="button" [routerLink]="routes.configs()">Cancel</button>
+    </p>
+  </div>
+
+</div>

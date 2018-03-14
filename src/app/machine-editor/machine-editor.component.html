@@ -6,13 +6,13 @@
   <div class="column configColumn">
     <span *ngIf="machine.type === ''">
       <span class="label">Select type or recipe:</span>
-      <dropdown [options]="allTypesAndRecipes" (valueChange)="machine.setTypeOrRecipe($event)"></dropdown>
+      <dropdown [options]="dropdownLists.allTypesAndRecipes" (valueChange)="setTypeOrRecipe($event)"></dropdown>
     </span>
     <span *ngIf="machine.type.length > 0">
       <input type="text" [(ngModel)]="machine.countText" class="input machineCount">
-      <dropdown [options]="allTypes" [(value)]="machine.type"></dropdown>
+      <dropdown [options]="dropdownLists.allTypes" [(value)]="machine.type"></dropdown>
       for
-      <dropdown [options]="recipesPerType[machine.type]" [(value)]="machine.recipe"></dropdown>
+      <dropdown [options]="dropdownLists.recipesPerType[machine.type]" [(value)]="machine.recipe"></dropdown>
       <span *ngIf="machine.isAutoAdded && machine.type == 'matter-source'">
         &nbsp;&nbsp;&nbsp;
         <dropdown [options]="allReplaceOptions()" (valueChange)="doReplace($event)" placeholder="Replace..."></dropdown>
@@ -20,12 +20,12 @@
       <div class="extraSettings">
         <span *ngIf="machine.hasFuel()">
         <span class="label">Fuel:</span>
-          <dropdown [options]="allFuelTypes" [(value)]="machine.fuel"></dropdown>
+          <dropdown [options]="dropdownLists.allFuelTypes" [(value)]="machine.fuel"></dropdown>
         </span>
         <span *ngIf="machine.modules.length > 0">
           <span class="label">Modules:</span>
           <span *ngFor="let module of machine.modules">
-            <dropdown [options]="allModuleTypes" [(value)]="module.type" showIconOnly="true"></dropdown>
+            <dropdown [options]="dropdownLists.allModuleTypes" [(value)]="module.type" showIconOnly="true"></dropdown>
           </span>
         </span>
       </div>
