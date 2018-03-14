@@ -1,4 +1,5 @@
 import { Component, OnInit, Input } from '@angular/core';
+import { GameData } from '../game-data';
 
 @Component({
   selector: 'items-speed',
@@ -27,13 +28,7 @@ export class ItemsSpeedComponent implements OnInit {
 
 
   itemIcon(item: string) : string {
-    let iconName = item;
-    if ((new RegExp('^empty-.*-barrel$')).test(item)) {
-      iconName = "barrel-empty";
-    } else if ((new RegExp('^fill-.*-barrel$')).test(item)) {
-      iconName = "barrel-fill";
-    }
-    return `assets/game_icons/${iconName}.png`;
+    return GameData.itemIconPath(item);
   }
 
 }

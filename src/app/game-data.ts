@@ -1,6 +1,6 @@
 import * as recipes_0_16_json from './recipes/recipes-0.16.json';
 
-export class RecipeIngredient {
+export interface RecipeIngredient {
   name: string;
   /** "item" or "fluid" */
   type: string;
@@ -11,7 +11,7 @@ export class RecipeIngredient {
   amount_max: number;
 }
 
-export class Recipe {
+export interface Recipe {
   /** name of the product (if single) or name of the process */
   name: string;
   /** Possible values: "advanced-crafting", "centrifuging", "chemistry", "crafting",
@@ -114,6 +114,17 @@ export class GameData {
 
     cache = r;
     return r;
+  }
+
+
+  static itemIconPath(name: string) : string {
+    let iconName = name;
+    if ((new RegExp('^empty-.*-barrel$')).test(name)) {
+      iconName = "barrel-empty";
+    } else if ((new RegExp('^fill-.*-barrel$')).test(name)) {
+      iconName = "barrel-fill";
+    }
+    return `assets/game_icons/${iconName}.png`;
   }
 
 }

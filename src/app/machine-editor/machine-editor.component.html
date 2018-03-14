@@ -13,6 +13,10 @@
       <dropdown [options]="allTypes" [(value)]="machine.type"></dropdown>
       for
       <dropdown [options]="recipesPerType[machine.type]" [(value)]="machine.recipe"></dropdown>
+      <span *ngIf="machine.isAutoAdded && machine.type == 'matter-source'">
+        &nbsp;&nbsp;&nbsp;
+        <dropdown [options]="allReplaceOptions()" (valueChange)="doReplace($event)" placeholder="Replace..."></dropdown>
+      </span>
       <div class="extraSettings">
         <span *ngIf="machine.hasFuel()">
         <span class="label">Fuel:</span>

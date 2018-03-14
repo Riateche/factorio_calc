@@ -94,14 +94,8 @@ export class MachineEditorComponent implements OnInit {
   }
 
   createOption(name: string) : DropdownOption {
-    let iconName = name;
-    if ((new RegExp('^empty-.*-barrel$')).test(name)) {
-      iconName = "barrel-empty";
-    } else if ((new RegExp('^fill-.*-barrel$')).test(name)) {
-      iconName = "barrel-fill";
-    }
     return new DropdownOption({
-      icon: `assets/game_icons/${iconName}.png`,
+      icon: GameData.itemIconPath(name),
       value: name,
       text: name
     });
@@ -120,5 +114,39 @@ export class MachineEditorComponent implements OnInit {
     this.machine.emulatorResult = null;
   }
 
+  allReplaceOptions() {
+    let r = [];
+    r.push(new DropdownOption({
+      value: "matter-source",
+      text: `matter-source for ${this.machine.recipe}`,
+      icon: GameData.itemIconPath(this.machine.recipe)
+    }));
+    if (GameData.current().recipesPerMachineType["electric-mining-drill"].indexOf(this.machine.recipe) !== -1) {
+      r.push(new DropdownOption({
+        value: "electric-mining-drill",
+        text: `electric-mining-drill for ${this.machine.recipe}`,
+        icon: GameData.itemIconPath(this.machine.recipe)
+      }));
+    }
+    let recipes = GameData.current().recipes.filter(r =>
+      r.products.find(p => p.name == this.machine.recipe) != null);
+    for(let recipe of recipes) {
+      r.push(new DropdownOption({
+        value: recipe.name,
+        text: `craft for ${recipe.name}`,
+        icon: GameData.itemIconPath(recipe.name)
+      }));
+    }
+    return r;
+  }
+
+  doReplace(value: string) {
+    if (value == "matter-source" || value == "electric-mining-drill") {
+      this.machine.type = value;
+    } else {
+      this.machine.setTypeOrRecipe(value);
+    }
+    this.machine.isAutoAdded = false;
+  }
 
 }

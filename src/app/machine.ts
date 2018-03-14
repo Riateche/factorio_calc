@@ -138,7 +138,11 @@ export class Machine {
     } else {
       let recipe = GameData.current().recipes.find(recipe => recipe.name == typeOrRecipe);
       if (!recipe) {
-        this.type = "matter-source";
+        if (GameData.current().recipesPerMachineType["electric-mining-drill"].indexOf(typeOrRecipe) !== -1) {
+          this.type = "electric-mining-drill";
+        } else {
+          this.type = "matter-source";
+        }
         this.recipe = typeOrRecipe;
       } else {
         if (!GameData.current().recipeCategoryToMachineTypes[recipe.category]) {
