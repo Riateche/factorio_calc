@@ -4,6 +4,7 @@
 .sortableHandle {
   cursor: ns-resize;
 }
+
 .sortableHandleColumn {
   font-size: 130%;
   flex-basis: 20px;
@@ -14,12 +15,23 @@
   line-height: 100%;
 }
 .configColumn {
-  flex-basis: 200px;
+  /* flex-basis: 200px; */
+  flex-grow: 0.5;
 }
 .deleteColumn {
   flex-basis: 50px;
   flex-grow: 0;
 }
+.ioColumn {
+  /* flex-basis: 200px; */
+  flex-grow: 0;
+  flex-grow: 0.1;
+}
+.loadColumn {
+  flex-grow: 0.2;
+}
+
+
 .label {
   display: inline;
   color: #888;

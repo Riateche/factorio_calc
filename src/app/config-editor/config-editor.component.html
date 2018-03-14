@@ -35,14 +35,20 @@
     <div class="column configColumn">
       Config
     </div>
-    <div class="column">
-      Max I/O
+    <div class="column ioColumn">
+      Max In
     </div>
-    <div class="column">
+    <div class="column ioColumn">
+      Max Out
+    </div>
+    <div class="column loadColumn">
       Load & fails
     </div>
-    <div class="column">
-      Actual I/O
+    <div class="column ioColumn">
+      Actual In
+    </div>
+    <div class="column ioColumn">
+      Actual Out
     </div>
     <div class="column deleteColumn"></div>
   </div>
@@ -65,15 +71,13 @@
     <div class="column configColumn">
       Total
     </div>
-    <div class="column">
-    </div>
-    <div class="column">
-    </div>
-    <div class="column">
-      <span class="label">In:</span>
+    <div class="column ioColumn"></div>
+    <div class="column ioColumn"></div>
+    <div class="column loadColumn"></div>
+    <div class="column ioColumn">
       <items-speed [value]="config.emulatorResult.totalInput"></items-speed>
-      <br>
-      <span class="label">Out:</span>
+    </div>
+    <div class="column ioColumn">
       <items-speed [value]="config.emulatorResult.totalOutput"></items-speed>
     </div>
     <div class="column deleteColumn"></div>
@@ -104,25 +108,24 @@
       <button class="button" (click)="toggleJsonContent()">Import / Export</button>
     </p>
     <p class="control">
-    <button class="button is-danger is-outlined" (click)="deleteConfig()">Delete config</button>
+      <button class="button is-danger is-outlined" (click)="deleteConfig()">Delete config</button>
     </p>
   </div>
 
   <textarea class="textarea" *ngIf="showJsonContent" [(ngModel)]="config.jsonContent"></textarea>
 
   <div class="infoBox">
-      All speed values are in items per second. Transport belt throughput (for reference):
-      <span class="icon">
-        <img src="assets/game_icons/transport-belt.png">
-      </span> = 13.33;
-      <span class="icon">
-        <img src="assets/game_icons/fast-transport-belt.png">
-      </span> = 26.67;
-      <span class="icon">
-        <img src="assets/game_icons/express-transport-belt.png">
-      </span> = 40.
+    All speed values are in items per second. Transport belt throughput (for reference):
+    <span class="icon">
+      <img src="assets/game_icons/transport-belt.png">
+    </span> = 13.33;
+    <span class="icon">
+      <img src="assets/game_icons/fast-transport-belt.png">
+    </span> = 26.67;
+    <span class="icon">
+      <img src="assets/game_icons/express-transport-belt.png">
+    </span> = 40.
 
-    </div>
+  </div>
 
 </div>
-

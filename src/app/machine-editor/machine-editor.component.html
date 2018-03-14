@@ -47,19 +47,18 @@
       </span>
     </span>
   </div>
-  <div class="column">
+  <div class="column ioColumn">
     <div class="errorString" *ngIf="machine.errorString !== ''">
       {{machine.errorString}}
     </div>
-    <span class="label">In:</span>
     <items-speed [value]="machine.maxInput"></items-speed>
     <span *ngIf="!hasAnyKey(machine.maxInput)">–</span>
-    <br>
-    <span class="label">Out:</span>
+  </div>
+  <div class="column ioColumn">
     <items-speed [value]="machine.maxOutput"></items-speed>
     <span *ngIf="!hasAnyKey(machine.maxOutput)">–</span>
   </div>
-  <div class="column">
+  <div class="column loadColumn">
     <div *ngIf="machine.emulatorResult">
       {{machine.emulatorResult.load * 100 | number: '1.0-0' }}%
       <span *ngIf="machine.emulatorResult.recommendedCount">
@@ -78,13 +77,14 @@
       </span>
     </div>
   </div>
-  <div class="column">
+  <div class="column ioColumn">
     <div *ngIf="machine.emulatorResult">
-      <span class="label">In:</span>
       <items-speed [value]="machine.emulatorResult.input"></items-speed>
       <span *ngIf="!hasAnyKey(machine.emulatorResult.input)">–</span>
-      <br>
-      <span class="label">Out:</span>
+    </div>
+  </div>
+  <div class="column ioColumn">
+    <div *ngIf="machine.emulatorResult">
       <items-speed [value]="machine.emulatorResult.output"></items-speed>
       <span *ngIf="!hasAnyKey(machine.emulatorResult.output)">–</span>
     </div>
