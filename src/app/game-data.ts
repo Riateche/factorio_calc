@@ -127,4 +127,8 @@ export class GameData {
     return `assets/game_icons/${iconName}.png`;
   }
 
+  itemIconPath(name: string) : string {
+    return GameData.itemIconPath(name);
+  }
+
 }

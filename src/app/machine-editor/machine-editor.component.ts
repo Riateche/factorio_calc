@@ -11,6 +11,7 @@ import { ConfigService } from '../config.service';
 })
 export class MachineEditorComponent implements OnInit {
   private _machine: Machine;
+  gameData: GameData;
 
   get machine() : Machine {
     return this._machine;
@@ -23,7 +24,7 @@ export class MachineEditorComponent implements OnInit {
   @Output() onDeleteRequested = new EventEmitter<void>();
 
   constructor(private dropdownLists: DropdownListsService, private configService: ConfigService) {
-
+    this.gameData = GameData.current();
   }
 
   ngOnInit() {
@@ -46,7 +47,7 @@ export class MachineEditorComponent implements OnInit {
 
   allReplaceOptions() {
     let r = [];
-    let recipes = GameData.current().recipes.filter(r =>
+    let recipes = this.gameData.recipes.filter(r =>
       r.products.find(p => p.name == this.machine.recipe) != null);
     for(let recipe of recipes) {
       r.push(new DropdownOption({
@@ -55,7 +56,7 @@ export class MachineEditorComponent implements OnInit {
         icon: GameData.itemIconPath(recipe.name)
       }));
     }
-    if (GameData.current().recipesPerMachineType["electric-mining-drill"].indexOf(this.machine.recipe) !== -1) {
+    if (this.gameData.recipesPerMachineType["electric-mining-drill"].indexOf(this.machine.recipe) !== -1) {
       r.push(new DropdownOption({
         value: "electric-mining-drill",
         text: `electric-mining-drill for ${this.machine.recipe}`,
@@ -84,23 +85,23 @@ export class MachineEditorComponent implements OnInit {
 
   setTypeOrRecipe(typeOrRecipe: string) {
     this.machine.clear();
-    if (GameData.current().machineTypes.indexOf(typeOrRecipe) !== -1) {
+    if (this.gameData.machineTypes.indexOf(typeOrRecipe) !== -1) {
       this.machine.type = typeOrRecipe;
     } else {
-      let recipe = GameData.current().recipes.find(recipe => recipe.name == typeOrRecipe);
+      let recipe = this.gameData.recipes.find(recipe => recipe.name == typeOrRecipe);
       if (!recipe) {
-        if (GameData.current().recipesPerMachineType["electric-mining-drill"].indexOf(typeOrRecipe) !== -1) {
+        if (this.gameData.recipesPerMachineType["electric-mining-drill"].indexOf(typeOrRecipe) !== -1) {
           this.machine.type = this.configService.settings().defaultDrill;
         } else {
           this.machine.type = "matter-source";
         }
         this.machine.recipe = typeOrRecipe;
       } else {
-        if (!GameData.current().recipeCategoryToMachineTypes[recipe.category]) {
+        if (!this.gameData.recipeCategoryToMachineTypes[recipe.category]) {
           alert("Unknown recipe category");
           return;
         }
-        let machineType = GameData.current().recipeCategoryToMachineTypes[recipe.category][0];
+        let machineType = this.gameData.recipeCategoryToMachineTypes[recipe.category][0];
         if (machineType == "assembling-machine-1") {
           machineType = this.configService.settings().defaultAssembler;
         } else if (machineType == "stone-furnace") {
@@ -113,6 +114,10 @@ export class MachineEditorComponent implements OnInit {
     if (this.machine.hasFuel() && this.machine.fuel === "") {
       this.machine.fuel = this.configService.settings().defaultFuel;
     }
+  }
+
+  isCreative() {
+    return this.machine.type == "matter-source" || this.machine.type == "matter-sink";
   }
 
 }

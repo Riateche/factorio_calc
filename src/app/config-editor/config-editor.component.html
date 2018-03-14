@@ -1,5 +1,3 @@
-
-
 <div *ngIf="config" class="root configEditor">
 
   <h1 class="title">Editing config</h1>
@@ -11,7 +9,7 @@
     <div class="field-body">
       <div class="field">
         <div class="control">
-          <input class="input" type="text"  [(ngModel)]="config.name">
+          <input class="input" type="text" [(ngModel)]="config.name">
         </div>
       </div>
     </div>
@@ -24,7 +22,7 @@
     <div class="field-body">
       <div class="field">
         <div class="control">
-          <input class="input" type="text"  [(ngModel)]="config.title">
+          <input class="input" type="text" [(ngModel)]="config.title">
         </div>
       </div>
     </div>
@@ -55,10 +53,10 @@
         <div class="column">Auto sources:</div>
       </div>
       <div class="columns tableSubHeader" *ngIf="machine === firstAutoSink()">
-          <div class="column sortableHandleColumn"></div>
-          <div class="column">Auto sinks:</div>
-        </div>
-        <machine-editor [machine]="machine" (onDeleteRequested)="deleteMachine(machine)"></machine-editor>
+        <div class="column sortableHandleColumn"></div>
+        <div class="column">Auto sinks:</div>
+      </div>
+      <machine-editor [machine]="machine" (onDeleteRequested)="deleteMachine(machine)"></machine-editor>
     </div>
   </div>
 
@@ -100,9 +98,25 @@
       <button class="button" [routerLink]="routes.configs()">Cancel</button>
     </p>
     <p class="control">
-        <button class="button is-danger is-outlined" (click)="deleteConfig()">Delete config</button>
+      <button class="button is-danger is-outlined" (click)="deleteConfig()">Delete config</button>
     </p>
   </div>
 
+  <div class="infoBox">
+      All speed values are items per second. Transport belt throughput (for reference):
+      <span class="icon">
+        <img src="assets/game_icons/transport-belt.png">
+      </span> = 13.33;
+      <span class="icon">
+        <img src="assets/game_icons/fast-underground-belt.png">
+      </span> = 26.67;
+      <span class="icon">
+        <img src="assets/game_icons/express-transport-belt.png">
+      </span> = 40.
+
+
+
+    </div>
 
 </div>
+

@@ -340,7 +340,9 @@ export class Machine {
         energyConsumptionCoef = 0.2;
       }
       if (this.globalSettings) {
-        productivityCoef += (this.globalSettings.miningProductivity - 100) / 100;
+        if (this.type == "electric-mining-drill" || this.type == "burner-mining-drill") {
+          productivityCoef += (this.globalSettings.miningProductivity - 100) / 100;
+        }
       }
 
       for(let key in this.maxInput) {

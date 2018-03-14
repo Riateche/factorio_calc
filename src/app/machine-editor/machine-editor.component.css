@@ -17,3 +17,6 @@
   color: #c00;
   font-weight: bold;
 }
+.replaceButton {
+  float: right;
+}

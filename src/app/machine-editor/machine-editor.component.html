@@ -9,26 +9,42 @@
       <dropdown [options]="dropdownLists.allTypesAndRecipes" (valueChange)="setTypeOrRecipe($event)"></dropdown>
     </span>
     <span *ngIf="machine.type.length > 0">
-      <input type="text" [(ngModel)]="machine.countText" class="input machineCount">
-      <dropdown [options]="dropdownLists.allTypes" [(value)]="machine.type"></dropdown>
-      for
-      <dropdown [options]="dropdownLists.recipesPerType[machine.type]" [(value)]="machine.recipe"></dropdown>
-      <span *ngIf="machine.isAutoAdded && machine.type == 'matter-source'">
-        &nbsp;&nbsp;&nbsp;
-        <dropdown [options]="allReplaceOptions()" (valueChange)="doReplace($event)" placeholder="Replace..."></dropdown>
-      </span>
-      <div class="extraSettings">
-        <span *ngIf="machine.hasFuel()">
-        <span class="label">Fuel:</span>
-          <dropdown [options]="dropdownLists.allFuelTypes" [(value)]="machine.fuel"></dropdown>
+      <span *ngIf="!machine.isAutoAdded">
+
+        <input type="text" [(ngModel)]="machine.countText" class="input machineCount" title="Machine count" *ngIf="!isCreative()">
+        <dropdown [options]="dropdownLists.allTypes" [(value)]="machine.type"></dropdown>
+        for
+        <dropdown [options]="dropdownLists.recipesPerType[machine.type]" [(value)]="machine.recipe"></dropdown>
+        <span *ngIf="machine.isAutoAdded && machine.type == 'matter-source'">
         </span>
-        <span *ngIf="machine.modules.length > 0">
-          <span class="label">Modules:</span>
-          <span *ngFor="let module of machine.modules">
-            <dropdown [options]="dropdownLists.allModuleTypes" [(value)]="module.type" showIconOnly="true"></dropdown>
+        <div class="extraSettings">
+          <span *ngIf="machine.hasFuel()">
+            <span class="label">Fuel:</span>
+            <dropdown [options]="dropdownLists.allFuelTypes" [(value)]="machine.fuel"></dropdown>
           </span>
+          <span *ngIf="machine.modules.length > 0">
+            <span class="label">Modules:</span>
+            <span *ngFor="let module of machine.modules">
+              <dropdown [options]="dropdownLists.allModuleTypes" [(value)]="module.type" showIconOnly="true"></dropdown>
+            </span>
+          </span>
+          <span *ngIf="isCreative()">
+            <span class="label">Speed:</span>
+            <input type="text" [(ngModel)]="machine.countText" class="input machineCount">
+          </span>
+        </div>
+
+
+      </span>
+      <span *ngIf="machine.isAutoAdded">
+        <span class="replaceButton">
+          <dropdown [options]="allReplaceOptions()" (valueChange)="doReplace($event)" placeholder="Replace..."></dropdown>
         </span>
-      </div>
+        <span class="icon">
+          <img [src]="gameData.itemIconPath(machine.recipe)">
+        </span>
+        {{machine.recipe}}
+      </span>
     </span>
   </div>
   <div class="column">
@@ -78,4 +94,3 @@
   </div>
 
 </div>
-
