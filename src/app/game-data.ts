@@ -1,4 +1,6 @@
 import * as recipes_0_16_json from './recipes/recipes-0.16.json';
+import { Machine } from './machine';
+import { Settings } from './config.service';
 
 export interface RecipeIngredient {
   name: string;
@@ -129,6 +131,35 @@ export class GameData {
 
   itemIconPath(name: string) : string {
     return GameData.itemIconPath(name);
+  }
+
+
+  setRecipe(recipeName: string, machine: Machine, settings: Settings) {
+    let recipe = this.recipes.find(recipe => recipe.name == recipeName);
+    if (!recipe) {
+      if (this.recipesPerMachineType["electric-mining-drill"].indexOf(recipeName) !== -1) {
+        machine.type = settings.defaultDrill;
+      } else {
+        machine.type = "matter-source";
+      }
+      machine.recipe = recipeName;
+    } else {
+      if (!this.recipeCategoryToMachineTypes[recipe.category]) {
+        alert("Unknown recipe category");
+        return;
+      }
+      let machineType = this.recipeCategoryToMachineTypes[recipe.category][0];
+      if (machineType == "assembling-machine-1") {
+        machineType = settings.defaultAssembler;
+      } else if (machineType == "stone-furnace") {
+        machineType = settings.defaultFurnace;
+      }
+      machine.type = machineType;
+      machine.recipe = recipeName;
+    }
+    if (machine.hasFuel() && machine.fuel === "") {
+      machine.fuel = settings.defaultFuel;
+    }
   }
 
 }

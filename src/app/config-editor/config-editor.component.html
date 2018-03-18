@@ -86,8 +86,9 @@
 
   <div class="field is-grouped">
     <p class="control">
-      <button class="button" (click)="addMachine()">Add machine</button>
+      <dropdown #addMachineDropdown [options]="dropdownLists.allTypesAndRecipes" (valueChange)="addMachine($event)" placeholder="Add machine..."></dropdown>
     </p>
+
     <p class="control">
       <button class="button" (click)="config.runEmulator()">Run emulator</button>
     </p>

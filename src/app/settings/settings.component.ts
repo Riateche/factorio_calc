@@ -13,7 +13,7 @@ import { DropdownListsService } from '../dropdown-lists.service';
 export class SettingsComponent implements OnInit {
   settings: Settings;
 
-  constructor(private configService: ConfigService, private router: Router, private routes: RouteService, private dropdownLists: DropdownListsService) { }
+  constructor(private configService: ConfigService, private router: Router, public routes: RouteService, public dropdownLists: DropdownListsService) { }
 
   ngOnInit() {
     this.settings = this.configService.settings();

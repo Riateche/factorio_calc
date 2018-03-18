@@ -72,48 +72,19 @@ export class MachineEditorComponent implements OnInit {
 
   doReplace(value: string) {
     this.machine.isAutoAdded = false;
-    if (value == "matter-source" || value == "electric-mining-drill") {
-      this.machine.type = value;
+    if (value == "matter-source") {
+      this.machine.type = "matter-source";
+    } else if (value == "electric-mining-drill" &&
+               this.gameData.recipesPerMachineType["electric-mining-drill"].indexOf(this.machine.recipe) !== -1) {
+      this.machine.type = "electric-mining-drill";
     } else {
-      this.setTypeOrRecipe(value);
+      this.gameData.setRecipe(value, this.machine, this.configService.settings());
     }
     if (this.machine.hasFuel() && this.machine.fuel === "") {
       this.machine.fuel = this.configService.settings().defaultFuel;
     }
   }
 
-  setTypeOrRecipe(typeOrRecipe: string) {
-    this.machine.clear();
-    if (this.gameData.machineTypes.indexOf(typeOrRecipe) !== -1) {
-      this.machine.type = typeOrRecipe;
-    } else {
-      let recipe = this.gameData.recipes.find(recipe => recipe.name == typeOrRecipe);
-      if (!recipe) {
-        if (this.gameData.recipesPerMachineType["electric-mining-drill"].indexOf(typeOrRecipe) !== -1) {
-          this.machine.type = this.configService.settings().defaultDrill;
-        } else {
-          this.machine.type = "matter-source";
-        }
-        this.machine.recipe = typeOrRecipe;
-      } else {
-        if (!this.gameData.recipeCategoryToMachineTypes[recipe.category]) {
-          alert("Unknown recipe category");
-          return;
-        }
-        let machineType = this.gameData.recipeCategoryToMachineTypes[recipe.category][0];
-        if (machineType == "assembling-machine-1") {
-          machineType = this.configService.settings().defaultAssembler;
-        } else if (machineType == "stone-furnace") {
-          machineType = this.configService.settings().defaultFurnace;
-        }
-        this.machine.type = machineType;
-        this.machine.recipe = typeOrRecipe;
-      }
-    }
-    if (this.machine.hasFuel() && this.machine.fuel === "") {
-      this.machine.fuel = this.configService.settings().defaultFuel;
-    }
-  }
 
   isCreative() {
     return this.machine.type == "matter-source" || this.machine.type == "matter-sink";

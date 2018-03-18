@@ -1,10 +1,13 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ElementRef, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ConfigService } from '../config.service';
 import { Config } from '../config';
 
 import { RouteService } from '../route.service';
 import { Machine } from '../machine';
+import { DropdownListsService } from '../dropdown-lists.service';
+import { GameData } from '../game-data';
+import { DropdownComponent } from '../dropdown/dropdown.component';
 
 @Component({
   selector: 'app-config-editor',
@@ -15,12 +18,17 @@ export class ConfigEditorComponent implements OnInit {
   originalConfigName: string
   config: Config
   showJsonContent: boolean = false;
+  @ViewChild("addMachineDropdown") addMachineDropdown: DropdownComponent;
 
   toggleJsonContent() {
     this.showJsonContent = !this.showJsonContent;
   }
 
-  constructor(private route: ActivatedRoute, private configService: ConfigService, private router: Router, private routes: RouteService) { }
+  constructor(private route: ActivatedRoute, private configService: ConfigService,
+    private router: Router, private routes: RouteService,
+    private dropdownLists: DropdownListsService)
+  {
+  }
 
   ngOnInit() {
     this.originalConfigName = this.route.snapshot.paramMap.get("name");
@@ -47,8 +55,10 @@ export class ConfigEditorComponent implements OnInit {
     this.router.navigate([this.routes.configs()]);
   }
 
-  addMachine() {
+  addMachine(recipeName: string) {
     let machine = new Machine();
+    GameData.current().setRecipe(recipeName, machine, this.configService.settings());
+
     let firstAutoSource = this.firstAutoSource();
     if (firstAutoSource) {
       let index = this.config.machines.indexOf(firstAutoSource);
@@ -56,6 +66,7 @@ export class ConfigEditorComponent implements OnInit {
     } else {
       this.config.machines.push(machine);
     }
+    this.addMachineDropdown.value = "";
   }
   deleteMachine(machine: Machine) {
     if (!confirm("Delete this machine?")) { return; }

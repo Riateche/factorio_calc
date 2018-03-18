@@ -12,7 +12,7 @@ import { RouteService } from '../route.service';
 export class ConfigsComponent implements OnInit {
   configs: Array<Config>
 
-  constructor(private configService: ConfigService, private router: Router, private routes: RouteService) {
+  constructor(private configService: ConfigService, private router: Router, public routes: RouteService) {
     this.configs = this.configService.allConfigs();
   }
 
