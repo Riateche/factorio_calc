@@ -8,9 +8,12 @@ export class RouteService {
   constructor() {
   }
 
-  static CONFIG_ROUTE = 'config/:name';
+  static CONFIG_ROUTE = 'config/:id';
   config(config: Config): string {
-    return `/config/${config.name}`;
+    return `/config/${config.id}`;
+  }
+  newConfig(): string {
+    return '/config/new';
   }
   static CONFIGS_ROUTE = '';
   configs() {

@@ -2,17 +2,13 @@ import { Machine } from './machine';
 import { runEmulator, GlobalEmulatorResult } from './emulator';
 
 export class Config {
-  name: string = "";
+  id: number = 0;
   title: string = "";
   machines: Array<Machine> = [];
   emulatorResult: GlobalEmulatorResult;
 
-  constructor(name?: string) {
-    this.name = name;
-  }
-
   clone() : Config {
-    var r = new Config(this.name);
+    var r = new Config();
     r.title = this.title;
     r.machines = this.machines.map(m => m.clone());
     return r;
@@ -30,14 +26,12 @@ export class Config {
   }
 
   setFromJson(data: any) {
-    this.name = data.name;
     this.title = data.title;
     this.machines = data.machines.map(m => Machine.fromJson(m));
   }
 
   toJson() : any {
     return {
-      name: this.name,
       title: this.title,
       machines: this.machines.filter(m => !m.isAutoAdded).map(m => m.toJson()),
     };
@@ -47,7 +41,7 @@ export class Config {
     if (this.title != "") {
       return this.title;
     } else {
-      return this.name;
+      return `Config ${this.id + 1}`;
     }
   }
 
@@ -61,13 +55,15 @@ export class Config {
     let allInputs = {};
     for(let i = 0; i < this.machines.length; i++) {
       for(let item in this.machines[i].maxInput || {}) {
-        allInputs[item] = true;
+        allInputs[item] = allInputs[item] || 0;
+        allInputs[item] += this.machines[i].maxInput[item];
       }
     }
     let allOutputs = {};
     for(let i = 0; i < this.machines.length; i++) {
       for(let item in this.machines[i].maxOutput || {}) {
-        allOutputs[item] = true;
+        allOutputs[item] = allOutputs[item] || 0;
+        allOutputs[item] += this.machines[i].maxOutput[item];
       }
     }
     for(let item in allInputs) {
@@ -75,7 +71,7 @@ export class Config {
         let machine = new Machine();
         machine.type = "matter-source";
         machine.recipe = item;
-        machine.count = 100;
+        machine.count = allInputs[item] * 1.01;
         machine.isAutoAdded = true;
         this.machines.push(machine);
       }
@@ -85,15 +81,11 @@ export class Config {
         let machine = new Machine();
         machine.type = "matter-sink";
         machine.recipe = item;
-        machine.count = 100;
+        machine.count = allOutputs[item] * 1.01;
         machine.isAutoAdded = true;
         this.machines.push(machine);
       }
     }
-
-
-
-
   }
 
   get jsonContent() : string {

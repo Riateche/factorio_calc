@@ -22,7 +22,6 @@ export class ItemsSpeedComponent implements OnInit {
         x.push({ item: key, speed: this.value[key]});
       }
     }
-    // console.log("ok1", this.value, x);
     return x;
   }
 

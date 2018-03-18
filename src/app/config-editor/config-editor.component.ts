@@ -15,7 +15,7 @@ import { DropdownComponent } from '../dropdown/dropdown.component';
   styleUrls: ['./config-editor.component.css']
 })
 export class ConfigEditorComponent implements OnInit {
-  originalConfigName: string
+  id: number
   config: Config
   showJsonContent: boolean = false;
   @ViewChild("addMachineDropdown") addMachineDropdown: DropdownComponent;
@@ -31,28 +31,37 @@ export class ConfigEditorComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.originalConfigName = this.route.snapshot.paramMap.get("name");
-    var config = this.configService.configByName(this.originalConfigName);
-    if (!config) {
-      alert(`Config not found: ${this.originalConfigName}`)
-      this.router.navigate([this.routes.configs()]);
-      return;
+    let idParam = this.route.snapshot.paramMap.get("id");
+    if (idParam === "new") {
+      this.id = null;
+      this.config = new Config();
+    } else {
+      this.id = parseInt(idParam);
+      var config = this.configService.configById(this.id);
+      if (!config) {
+        alert(`Config not found: ${idParam}`)
+        this.router.navigate([this.routes.configs()]);
+        return;
+      }
+      this.config = config.clone();
     }
-    this.config = config.clone();
+
+
   }
 
   deleteConfig() {
     if (!confirm("Delete this config?")) {
       return;
     }
-    this.configService.deleteConfig(this.originalConfigName);
+    this.configService.deleteConfig(this.id);
     this.router.navigate([this.routes.configs()]);
   }
 
   save() {
-    console.log('test1', this.config);
-    this.configService.updateConfig(this.originalConfigName, this.config);
-    this.router.navigate([this.routes.configs()]);
+    this.configService.addOrUpdateConfig(this.id, this.config);
+    this.id = this.config.id;
+    alert("Saved.");
+    //this.router.navigate([this.routes.configs()]);
   }
 
   addMachine(recipeName: string) {
@@ -79,11 +88,11 @@ export class ConfigEditorComponent implements OnInit {
   firstAutoSink() {
     return this.config.machines.find(m => m.isAutoAdded && m.type == "matter-sink");
   }
-  duplicate() {
-    let newConfig = this.configService.newConfig();
+  saveCopy() {
+    let newConfig = new Config();
     newConfig.copyFrom(this.config);
     newConfig.title = `${this.config.title} (copy)`;
-    this.configService.updateConfig(newConfig.name, newConfig);
+    this.configService.addOrUpdateConfig(null, newConfig);
     alert("Copy saved.");
   }
 }

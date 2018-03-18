@@ -84,10 +84,8 @@ export class DropdownComponent implements OnInit {
   currentIcon() : string {
     let option = this.currentOption();
     if (option) {
-      //console.log("ok1", option);
       return option.icon;
     } else {
-      //console.log("ok1a");
       return "";
     }
   }
@@ -104,7 +102,6 @@ export class DropdownComponent implements OnInit {
   valueText() {
     let option = this.currentOption();
     if (option) {
-      //console.log("a21");
       return this.showIconOnly ? "" : option.text;
     } else if (this.value === "" || !this.value) {
       return this.placeholder;

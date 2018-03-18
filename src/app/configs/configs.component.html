@@ -9,7 +9,7 @@
     <div class="panel-block">
       <div class="field is-grouped">
         <p class="control">
-          <button class="button is-primary" (click)="addConfig()">Add config</button>
+          <button class="button is-primary" [routerLink]="routes.newConfig()">Add config</button>
         </p>
         <p class="control">
           <button class="button" [routerLink]="routes.settings()">Settings</button>

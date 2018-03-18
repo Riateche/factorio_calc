@@ -1,131 +1,123 @@
 <div *ngIf="config" class="root configEditor">
 
-  <h1 class="title">Editing config</h1>
+  <div class="fixedPageHeader">
 
-  <div class="field is-horizontal">
-    <div class="field-label is-normal">
-      <label class="label">Name</label>
+    <div class="field is-grouped">
+      <p class="control">
+        <label class="label">Title:</label>
+      </p>
+      <p class="control titleControl">
+        <input class="input" type="text" [(ngModel)]="config.title">
+      </p>
+      <p class="control">
+        <dropdown #addMachineDropdown [options]="dropdownLists.allRecipesAndResources" (valueChange)="addMachine($event)" placeholder="Add machine..."></dropdown>
+      </p>
+
+      <p class="control">
+        <button class="button" (click)="config.runEmulator()">Run emulator</button>
+      </p>
+
+      <div class="mainActionsSeparator"></div>
+
+      <p class="control">
+        <button class="button is-primary" (click)="save()">Save</button>
+      </p>
+      <p class="control">
+        <button class="button" [routerLink]="routes.configs()">Cancel</button>
+      </p>
+      <p class="control">
+        <button class="button" (click)="saveCopy()">Save copy</button>
+      </p>
+      <p class="control">
+        <button class="button" (click)="toggleJsonContent()">Import / Export</button>
+      </p>
+      <p class="control" *ngIf="id !== null">
+        <button class="button is-danger is-outlined" (click)="deleteConfig()">Delete config</button>
+      </p>
     </div>
-    <div class="field-body">
-      <div class="field">
-        <div class="control">
-          <input class="input" type="text" [(ngModel)]="config.name">
+
+
+
+    <textarea class="textarea" *ngIf="showJsonContent" [(ngModel)]="config.jsonContent"></textarea>
+
+
+
+
+    <div class="columns tableHeader">
+      <div class="column sortableHandleColumn"></div>
+      <div class="column configColumn">
+        Machine&nbsp;properties
+      </div>
+      <div class="column ioColumn">
+        Max&nbsp;In
+      </div>
+      <div class="column ioColumn">
+        Max&nbsp;Out
+      </div>
+      <div class="column loadColumn">
+        Load&nbsp;&amp;&nbsp;fails
+      </div>
+      <div class="column ioColumn">
+        Actual&nbsp;In
+      </div>
+      <div class="column ioColumn">
+        Actual&nbsp;Out
+      </div>
+      <div class="column deleteColumn"></div>
+    </div>
+  </div>
+  <div class="underFixedPageHeader">
+    <div [sortablejs]="config.machines">
+      <div *ngFor="let machine of config.machines" class="machineContainer">
+        <div class="columns tableSubHeader" *ngIf="machine === firstAutoSource()">
+          <div class="column sortableHandleColumn"></div>
+          <div class="column">Auto sources:</div>
         </div>
-      </div>
-    </div>
-  </div>
-
-  <div class="field is-horizontal">
-    <div class="field-label is-normal">
-      <label class="label">Title</label>
-    </div>
-    <div class="field-body">
-      <div class="field">
-        <div class="control">
-          <input class="input" type="text" [(ngModel)]="config.title">
+        <div class="columns tableSubHeader" *ngIf="machine === firstAutoSink()">
+          <div class="column sortableHandleColumn"></div>
+          <div class="column">Auto sinks:</div>
         </div>
+        <machine-editor [machine]="machine" (onDeleteRequested)="deleteMachine(machine)"></machine-editor>
       </div>
     </div>
-  </div>
 
-  <h2 class="title is-4">Machines:</h2>
-
-  <div class="columns tableHeader">
-    <div class="column sortableHandleColumn"></div>
-    <div class="column configColumn">
-      Config
-    </div>
-    <div class="column ioColumn">
-      Max In
-    </div>
-    <div class="column ioColumn">
-      Max Out
-    </div>
-    <div class="column loadColumn">
-      Load & fails
-    </div>
-    <div class="column ioColumn">
-      Actual In
-    </div>
-    <div class="column ioColumn">
-      Actual Out
-    </div>
-    <div class="column deleteColumn"></div>
-  </div>
-  <div [sortablejs]="config.machines">
-    <div *ngFor="let machine of config.machines" class="machineContainer">
-      <div class="columns tableSubHeader" *ngIf="machine === firstAutoSource()">
-        <div class="column sortableHandleColumn"></div>
-        <div class="column">Auto sources:</div>
+    <div class="columns" *ngIf="config.emulatorResult">
+      <div class="column sortableHandleColumn"></div>
+      <div class="column configColumn">
+        Total
       </div>
-      <div class="columns tableSubHeader" *ngIf="machine === firstAutoSink()">
-        <div class="column sortableHandleColumn"></div>
-        <div class="column">Auto sinks:</div>
+      <div class="column ioColumn"></div>
+      <div class="column ioColumn"></div>
+      <div class="column loadColumn"></div>
+      <div class="column ioColumn">
+        <items-speed [value]="config.emulatorResult.totalInput"></items-speed>
       </div>
-      <machine-editor [machine]="machine" (onDeleteRequested)="deleteMachine(machine)"></machine-editor>
+      <div class="column ioColumn">
+        <items-speed [value]="config.emulatorResult.totalOutput"></items-speed>
+      </div>
+      <div class="column deleteColumn"></div>
     </div>
-  </div>
 
-  <div class="columns" *ngIf="config.emulatorResult">
-    <div class="column sortableHandleColumn"></div>
-    <div class="column configColumn">
-      Total
+
+
+
+
+
+    <div class="infoBox">
+      All speed values are in items per second. Transport belt throughput (for reference):
+      <span class="icon">
+        <img src="assets/game_icons/transport-belt.png">
+      </span> = 13.33;
+      <span class="icon">
+        <img src="assets/game_icons/fast-transport-belt.png">
+      </span> = 26.67;
+      <span class="icon">
+        <img src="assets/game_icons/express-transport-belt.png">
+      </span> = 40.
+      <br> More information is available at
+      <a href="https://github.com/Riateche/factorio_calc">GitHub page</a>.
+
     </div>
-    <div class="column ioColumn"></div>
-    <div class="column ioColumn"></div>
-    <div class="column loadColumn"></div>
-    <div class="column ioColumn">
-      <items-speed [value]="config.emulatorResult.totalInput"></items-speed>
-    </div>
-    <div class="column ioColumn">
-      <items-speed [value]="config.emulatorResult.totalOutput"></items-speed>
-    </div>
-    <div class="column deleteColumn"></div>
-  </div>
-
-
-  <div class="field is-grouped">
-    <p class="control">
-      <dropdown #addMachineDropdown [options]="dropdownLists.allTypesAndRecipes" (valueChange)="addMachine($event)" placeholder="Add machine..."></dropdown>
-    </p>
-
-    <p class="control">
-      <button class="button" (click)="config.runEmulator()">Run emulator</button>
-    </p>
-  </div>
-
-
-  <div class="field is-grouped">
-    <p class="control">
-      <button class="button is-primary" (click)="save()">Save</button>
-    </p>
-    <p class="control">
-      <button class="button" [routerLink]="routes.configs()">Cancel</button>
-    </p>
-    <p class="control">
-      <button class="button" (click)="duplicate()">Duplicate</button>
-    </p>
-    <p class="control">
-      <button class="button" (click)="toggleJsonContent()">Import / Export</button>
-    </p>
-    <p class="control">
-      <button class="button is-danger is-outlined" (click)="deleteConfig()">Delete config</button>
-    </p>
-  </div>
-
-  <textarea class="textarea" *ngIf="showJsonContent" [(ngModel)]="config.jsonContent"></textarea>
-
-  <div class="infoBox">
-    All speed values are in items per second. Transport belt throughput (for reference):
-    <span class="icon">
-      <img src="assets/game_icons/transport-belt.png">
-    </span> = 13.33;
-    <span class="icon">
-      <img src="assets/game_icons/fast-transport-belt.png">
-    </span> = 26.67;
-    <span class="icon">
-      <img src="assets/game_icons/express-transport-belt.png">
-    </span> = 40.
 
   </div>
 

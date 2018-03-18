@@ -5,7 +5,7 @@ import { GameData } from './game-data';
 @Injectable()
 export class DropdownListsService {
   allTypes: Array<DropdownOption> = [];
-  allTypesAndRecipes: Array<DropdownOption> = [];
+  allRecipesAndResources: Array<DropdownOption> = [];
   allFuelTypes: Array<DropdownOption> = [];
   allModuleTypes: Array<DropdownOption> = [];
   recipesPerType: {[type: string]: Array<DropdownOption>} = {};
@@ -36,12 +36,9 @@ export class DropdownListsService {
       this.createOption("electric-mining-drill"),
       this.createOption("burner-mining-drill")
     ];
-    this.allTypesAndRecipes = this.allTypes.concat(
-      DropdownOption.newSeparator(),
-      DropdownOption.newTitle('Crafting recipes')
-    );
+    this.allRecipesAndResources.push(DropdownOption.newTitle('Crafting recipes'));
     for (let recipe of gameData.recipes) {
-      this.allTypesAndRecipes.push(this.createOption(recipe.name));
+      this.allRecipesAndResources.push(this.createOption(recipe.name));
     }
     for(let machine of gameData.machineTypes) {
       this.recipesPerType[machine] = gameData.recipesPerMachineType[machine]
@@ -49,9 +46,9 @@ export class DropdownListsService {
     }
 
 
-    this.allTypesAndRecipes.push(DropdownOption.newTitle('Resources'));
+    this.allRecipesAndResources.push(DropdownOption.newTitle('Resources'));
     for(let item of gameData.allItemsNotRecipeNames) {
-      this.allTypesAndRecipes.push(this.createOption(item));
+      this.allRecipesAndResources.push(this.createOption(item));
     }
 
     //let allItems = gameData.allItems.map(item => this.createOption(item));

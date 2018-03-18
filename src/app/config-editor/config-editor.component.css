@@ -1,6 +1,4 @@
-.root {
-  padding: 20px 50px;
-}
+
 .totalIO {
   margin-bottom: 10px;
 }
@@ -10,4 +8,30 @@
   border-top: 2px solid #ccc;
   border-bottom: none;
 }
-
+label {
+  vertical-align: middle;
+}
+.final-actions {
+  float: right;
+}
+.mainActionsSeparator {
+  flex-grow: 1;
+}
+.tableHeader {
+  margin-top: 10px;
+}
+.fixedPageHeader {
+  position: fixed;
+  width: 100%;
+  height: 145px;
+  background: white;
+  padding: 20px 50px;
+  z-index: 1;
+}
+.underFixedPageHeader {
+  padding: 145px 50px 20px;
+}
+.control.titleControl {
+  flex-shrink: 1;
+  min-width: 100px;
+}

@@ -31,6 +31,7 @@ export class ConfigService {
     let data = JSON.parse(localStorage.getItem(localStorageKey));
     if (data) {
       this._allConfigs = data.configs.map(c => Config.fromJson(c));
+      this.updateIds();
       this._settings = Object.assign(this._settings, data.settings);
     }
   }
@@ -48,34 +49,38 @@ export class ConfigService {
     return this._allConfigs;
   }
 
-  newConfig() {
-    let id: number = 1;
-    while(this.configByName(`config${id}`)) {
-      id++;
-    }
-    let config: Config = new Config(`config${id}`);
-    this._allConfigs.push(config);
-    this.save();
-    return config;
-  }
+  addOrUpdateConfig(id: number, config: Config) {
+    if (id === null) {
+      config.id = this._allConfigs.length;
+      this._allConfigs.push(config);
 
-  updateConfig(name: string, config: Config) {
-    for(let i in this._allConfigs) {
-      if (this._allConfigs[i].name == name) {
-        this._allConfigs[i] = config;
-        break;
+    } else {
+      if (id >= 0 && id < this._allConfigs.length) {
+        config.id = id;
+        this._allConfigs[id] = config;
+      } else {
+        alert("Invalid id");
       }
     }
     this.save();
   }
 
-  configByName(name: string) : Config {
-    return this._allConfigs.find(c => c.name == name);
+  configById(id: number) : Config {
+    if (id >= 0 && id < this._allConfigs.length) {
+      return this._allConfigs[id];
+    } else {
+      return null;
+    }
   }
 
-  deleteConfig(name: string) {
-    this._allConfigs = this._allConfigs.filter(c => c.name != name);
-    this.save();
+  deleteConfig(id: number) {
+    if (id >= 0 && id < this._allConfigs.length) {
+      this._allConfigs.splice(id, 1);
+      this.updateIds();
+      this.save();
+    } else {
+      alert("invalid id");
+    }
   }
 
   private save() {
@@ -86,5 +91,9 @@ export class ConfigService {
     localStorage.setItem(localStorageKey, JSON.stringify(data));
   }
 
-
+  private updateIds() {
+    for(let i = 0; i < this._allConfigs.length; i++) {
+      this._allConfigs[i].id = i;
+    }
+  }
 }
