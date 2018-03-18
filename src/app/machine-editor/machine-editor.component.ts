@@ -77,8 +77,10 @@ export class MachineEditorComponent implements OnInit {
     } else if (value == "electric-mining-drill" &&
                this.gameData.recipesPerMachineType["electric-mining-drill"].indexOf(this.machine.recipe) !== -1) {
       this.machine.type = "electric-mining-drill";
+      this.machine.count = 1;
     } else {
       this.gameData.setRecipe(value, this.machine, this.configService.settings());
+      this.machine.count = 1;
     }
     if (this.machine.hasFuel() && this.machine.fuel === "") {
       this.machine.fuel = this.configService.settings().defaultFuel;
