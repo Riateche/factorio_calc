@@ -67,14 +67,14 @@
     </div>
   </div>
   <div class="underFixedPageHeader">
-    <div *ngIf="config.machines.length === 0" class="columns">
+    <div *ngIf="machines.length === 0" class="columns">
         <div class="column sortableHandleColumn"></div>
         <div class="column configColumn">
           No machines added yet.
         </div>
     </div>
-    <div [sortablejs]="config.machines">
-      <div *ngFor="let machine of config.machines" class="machineContainer">
+    <div [sortablejs]="machines">
+      <div *ngFor="let machine of machines" class="machineContainer">
         <div class="columns tableSubHeader" *ngIf="machine === firstAutoSource()">
           <div class="column sortableHandleColumn"></div>
           <div class="column">Auto sources:</div>

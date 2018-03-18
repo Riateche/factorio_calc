@@ -9,6 +9,7 @@ import { DropdownListsService } from '../dropdown-lists.service';
 import { GameData } from '../game-data';
 import { DropdownComponent } from '../dropdown/dropdown.component';
 import { runEmulator, GlobalEmulatorResult } from '../emulator';
+import { ActiveMachine } from '../machine-editor/machine-editor.component';
 
 @Component({
   selector: 'app-config-editor',
@@ -19,8 +20,11 @@ export class ConfigEditorComponent implements OnInit {
   id: number
   config: Config
   showJsonContent: boolean = false;
+  machines: Array<ActiveMachine> = [];
   emulatorResult: GlobalEmulatorResult;
+
   @ViewChild("addMachineDropdown") addMachineDropdown: DropdownComponent;
+
 
   toggleJsonContent() {
     this.showJsonContent = !this.showJsonContent;
@@ -54,6 +58,7 @@ export class ConfigEditorComponent implements OnInit {
       }
       this.config = config.clone();
     }
+    this.machines = this.config.machines.map(m => new ActiveMachine(m));
 
 
   }
@@ -67,6 +72,7 @@ export class ConfigEditorComponent implements OnInit {
   }
 
   save() {
+    this.config.machines = this.machines.map(m => m.machine);
     this.configService.addOrUpdateConfig(this.id, this.config);
     this.id = this.config.id;
     alert("Saved.");
@@ -77,25 +83,27 @@ export class ConfigEditorComponent implements OnInit {
     let machine = new Machine();
     GameData.current().setRecipe(recipeName, machine, this.configService.settings());
 
+    let activeMachine = new ActiveMachine(machine);
+
     let firstAutoSource = this.firstAutoSource();
     if (firstAutoSource) {
-      let index = this.config.machines.indexOf(firstAutoSource);
-      this.config.machines.splice(index, 0, machine);
+      let index = this.machines.indexOf(firstAutoSource);
+      this.machines.splice(index, 0, activeMachine);
     } else {
-      this.config.machines.push(machine);
+      this.machines.push(activeMachine);
     }
     this.addMachineDropdown.value = "";
   }
-  deleteMachine(machine: Machine) {
+  deleteMachine(machine: ActiveMachine) {
     if (!confirm("Delete this machine?")) { return; }
-    this.config.machines.splice(this.config.machines.indexOf(machine), 1);
+    this.machines.splice(this.machines.indexOf(machine), 1);
   }
 
-  firstAutoSource() {
-    return this.config.machines.find(m => m.isAutoAdded && m.type == "matter-source");
+  firstAutoSource(): ActiveMachine {
+    return this.machines.find(m => m.machine.isAutoAdded && m.machine.type == "matter-source");
   }
-  firstAutoSink() {
-    return this.config.machines.find(m => m.isAutoAdded && m.type == "matter-sink");
+  firstAutoSink(): ActiveMachine {
+    return this.machines.find(m => m.machine.isAutoAdded && m.machine.type == "matter-sink");
   }
   saveCopy() {
     let newConfig = new Config();
@@ -106,7 +114,48 @@ export class ConfigEditorComponent implements OnInit {
   }
 
   runEmulator() {
-    this.config.autoAddSourcesAndSinks();
-    this.emulatorResult = runEmulator(this.config.machines);
+    this.autoAddSourcesAndSinks();
+    this.emulatorResult = runEmulator(this.machines);
   }
+
+
+  autoAddSourcesAndSinks() {
+    this.machines = this.machines.filter(m => !m.machine.isAutoAdded);
+    let allInputs = {};
+    for(let i = 0; i < this.machines.length; i++) {
+      console.log("ok1", this.machines[i]);
+      for(let item in this.machines[i].maxInput) {
+        allInputs[item] = allInputs[item] || 0;
+        allInputs[item] += this.machines[i].maxInput[item];
+      }
+    }
+    let allOutputs = {};
+    for(let i = 0; i < this.machines.length; i++) {
+      for(let item in this.machines[i].maxOutput) {
+        allOutputs[item] = allOutputs[item] || 0;
+        allOutputs[item] += this.machines[i].maxOutput[item];
+      }
+    }
+    for(let item in allInputs) {
+      if (!allOutputs[item]) {
+        let machine = new Machine();
+        machine.type = "matter-source";
+        machine.recipe = item;
+        machine.creativeSpeed = allInputs[item] * 1.01;
+        machine.isAutoAdded = true;
+        this.machines.push(new ActiveMachine(machine));
+      }
+    }
+    for(let item in allOutputs) {
+      if (!allInputs[item]) {
+        let machine = new Machine();
+        machine.type = "matter-sink";
+        machine.recipe = item;
+        machine.creativeSpeed = allOutputs[item] * 1.01;
+        machine.isAutoAdded = true;
+        this.machines.push(new ActiveMachine(machine));
+      }
+    }
+  }
+
 }

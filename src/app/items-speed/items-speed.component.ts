@@ -27,7 +27,7 @@ export class ItemsSpeedComponent implements OnInit {
 
 
   itemIcon(item: string) : string {
-    return GameData.itemIconPath(item);
+    return GameData.current().itemIconPath(item);
   }
 
 }

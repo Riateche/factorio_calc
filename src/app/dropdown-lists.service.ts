@@ -100,7 +100,7 @@ export class DropdownListsService {
 
   createOption(name: string) : DropdownOption {
     return new DropdownOption({
-      icon: GameData.itemIconPath(name),
+      icon: GameData.current().itemIconPath(name),
       value: name,
       text: name
     });

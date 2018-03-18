@@ -1,4 +1,5 @@
 import { Machine } from "./machine"
+import { ActiveMachine } from "./machine-editor/machine-editor.component";
 
 const THR = 0.001;
 let min = Math.min;
@@ -62,12 +63,12 @@ class ItemBuffer {
 }
 
 class Module {
-  machine: Machine;
+  machine: ActiveMachine;
   cycles: number = 0;
   inputFails: any = {};
   outputFails: any = {};
 
-  constructor(m: Machine) {
+  constructor(m: ActiveMachine) {
     this.machine = m;
   }
 
@@ -80,7 +81,8 @@ export interface GlobalEmulatorResult {
 }
 
 
-export function runEmulator(machines: Array<Machine>) : GlobalEmulatorResult {
+export function runEmulator(machines: Array<ActiveMachine>) : GlobalEmulatorResult {
+  console.log("ok2", machines);
 
   let modules = machines.map(m => new Module(m));
 
@@ -93,6 +95,7 @@ export function runEmulator(machines: Array<Machine>) : GlobalEmulatorResult {
       all_items[item] = true;
     }
   }
+
 
   let dt = 0.01;
   let total_cycles = 10000;
@@ -122,6 +125,7 @@ export function runEmulator(machines: Array<Machine>) : GlobalEmulatorResult {
     });
   }
 
+  console.log("ok3", buffers);
 
 
   for(let cycle_i = 0; cycle_i < total_cycles; cycle_i++) {
@@ -179,31 +183,34 @@ export function runEmulator(machines: Array<Machine>) : GlobalEmulatorResult {
       result.outputFails[item] = modules[i].outputFails[item] /
         (total_cycles - starting_cycle);
     }
+    console.log("ok5a", modules[i].machine.maxInput);
     for(let item in modules[i].machine.maxInput) {
-      result.input[item] = result.load * modules[i].machine.maxInput[item];
+      console.log("ok5", item, result.load, modules[i].machine.maxInput[item]);
+      result.input[item] = result.load, modules[i].machine.maxInput[item];
     }
     for(let item in modules[i].machine.maxOutput) {
       result.output[item] = result.load * modules[i].machine.maxOutput[item];
     }
-    if (modules[i].machine.type !== "matter-source" &&
-        modules[i].machine.type !== "matter-sink")
+    if (modules[i].machine.machine.type !== "matter-source" &&
+        modules[i].machine.machine.type !== "matter-sink")
     {
-      let realCount = Math.ceil(modules[i].machine.count * result.load - 0.01);
-      if (realCount < modules[i].machine.count) {
+      let realCount = Math.ceil(modules[i].machine.machine.count * result.load - 0.01);
+      if (realCount < modules[i].machine.machine.count) {
         result.recommendedCount = realCount;
       }
     }
 
 
     modules[i].machine.emulatorResult = result;
+    console.log("ok4", modules[i]);
   }
   let cache_speed = {};
   for(let i = 0; i < modules.length; i++) {
-    if (!modules[i].machine.isAutoAdded) {
-      for(let item in modules[i].machine.emulatorResult.input || []) {
+    if (!modules[i].machine.machine.isAutoAdded) {
+      for(let item in modules[i].machine.emulatorResult.input) {
         cache_speed[item] = (cache_speed[item] || 0) - modules[i].machine.emulatorResult.input[item];
       }
-      for(let item in modules[i].machine.emulatorResult.output || []) {
+      for(let item in modules[i].machine.emulatorResult.output) {
         cache_speed[item] = (cache_speed[item] || 0) + modules[i].machine.emulatorResult.output[item];
       }
     }

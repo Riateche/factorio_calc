@@ -42,42 +42,4 @@ export class Config {
     }
   }
 
-
-  autoAddSourcesAndSinks() {
-    this.machines = this.machines.filter(m => !m.isAutoAdded);
-    let allInputs = {};
-    for(let i = 0; i < this.machines.length; i++) {
-      for(let item in this.machines[i].maxInput || {}) {
-        allInputs[item] = allInputs[item] || 0;
-        allInputs[item] += this.machines[i].maxInput[item];
-      }
-    }
-    let allOutputs = {};
-    for(let i = 0; i < this.machines.length; i++) {
-      for(let item in this.machines[i].maxOutput || {}) {
-        allOutputs[item] = allOutputs[item] || 0;
-        allOutputs[item] += this.machines[i].maxOutput[item];
-      }
-    }
-    for(let item in allInputs) {
-      if (!allOutputs[item]) {
-        let machine = new Machine();
-        machine.type = "matter-source";
-        machine.recipe = item;
-        machine.count = allInputs[item] * 1.01;
-        machine.isAutoAdded = true;
-        this.machines.push(machine);
-      }
-    }
-    for(let item in allOutputs) {
-      if (!allInputs[item]) {
-        let machine = new Machine();
-        machine.type = "matter-sink";
-        machine.recipe = item;
-        machine.count = allOutputs[item] * 1.01;
-        machine.isAutoAdded = true;
-        this.machines.push(machine);
-      }
-    }
-  }
 }

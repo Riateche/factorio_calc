@@ -1,48 +1,48 @@
 <div class="columns">
-  <div class="column sortableHandle sortableHandleColumn" *ngIf="!machine.isAutoAdded">
+  <div class="column sortableHandle sortableHandleColumn" *ngIf="!machine.machine.isAutoAdded">
     ↕
   </div>
-  <div class="column sortableHandleColumn" *ngIf="machine.isAutoAdded"></div>
+  <div class="column sortableHandleColumn" *ngIf="machine.machine.isAutoAdded"></div>
   <div class="column configColumn">
-    <span *ngIf="!machine.isAutoAdded">
+    <span *ngIf="!machine.machine.isAutoAdded">
 
-      <input type="text" [(ngModel)]="machine.countText" class="input machineCount" title="Machine count" *ngIf="!isCreative()">
-      <dropdown [options]="dropdownLists.allTypes" [(value)]="machine.type"></dropdown>
+      <input type="text" [(ngModel)]="count" class="input machineCount" title="Machine count" *ngIf="!isCreative()">
+      <dropdown [options]="dropdownLists.allTypes" [(value)]="type"></dropdown>
       for
-      <dropdown [options]="dropdownLists.recipesPerType[machine.type]" [(value)]="machine.recipe"></dropdown>
-      <span *ngIf="machine.isAutoAdded && machine.type == 'matter-source'">
+      <dropdown [options]="dropdownLists.recipesPerType[type]" [(value)]="recipe"></dropdown>
+      <span *ngIf="machine.machine.isAutoAdded && type == 'matter-source'">
       </span>
       <div class="extraSettings">
-        <span *ngIf="machine.hasFuel()">
+        <span *ngIf="machine.machine.hasFuel()">
           <span class="label">Fuel:</span>
-          <dropdown [options]="dropdownLists.allFuelTypes" [(value)]="machine.fuel"></dropdown>
+          <dropdown [options]="dropdownLists.allFuelTypes" [(value)]="fuel"></dropdown>
         </span>
-        <span *ngIf="machine.modules.length > 0">
+        <span *ngIf="modules.length > 0">
           <span class="label">Modules:</span>
-          <span *ngFor="let module of machine.modules">
+          <span *ngFor="let module of modules">
             <dropdown [options]="dropdownLists.allModuleTypes" [(value)]="module.type" showIconOnly="true"></dropdown>
           </span>
         </span>
         <span *ngIf="isCreative()">
           <span class="label">Speed:</span>
-          <input type="text" [(ngModel)]="machine.countText" class="input machineCount">
+          <input type="text" [(ngModel)]="creativeSpeed" class="input machineCount">
         </span>
       </div>
 
     </span>
-    <span *ngIf="machine.isAutoAdded">
-      <span class="replaceButton" *ngIf="machine.type == 'matter-source'">
+    <span *ngIf="machine.machine.isAutoAdded">
+      <span class="replaceButton" *ngIf="type == 'matter-source'">
         <dropdown [options]="allReplaceOptions()" (valueChange)="doReplace($event)" placeholder="Replace..."></dropdown>
       </span>
       <span class="icon">
-        <img [src]="gameData.itemIconPath(machine.recipe)">
+        <img [src]="gameData.itemIconPath(recipe)">
       </span>
-      {{machine.recipe}}
+      {{recipe}}
     </span>
   </div>
   <div class="column ioColumn">
-    <div class="errorString" *ngIf="machine.errorString !== ''">
-      {{machine.errorString}}
+    <div class="errorString" *ngIf="errorString !== ''">
+      {{errorString}}
     </div>
     <items-speed [value]="machine.maxInput"></items-speed>
     <span *ngIf="!hasAnyKey(machine.maxInput)">–</span>
@@ -83,7 +83,7 @@
     </div>
   </div>
   <div class="column deleteColumn">
-    <a class="delete is-medium" title="Remove machine" (click)="onDeleteRequested.emit()" *ngIf="!machine.isAutoAdded"></a>
+    <a class="delete is-medium" title="Remove machine" (click)="onDeleteRequested.emit()" *ngIf="!machine.machine.isAutoAdded"></a>
   </div>
 
 </div>
