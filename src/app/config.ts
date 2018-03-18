@@ -1,11 +1,9 @@
 import { Machine } from './machine';
-import { runEmulator, GlobalEmulatorResult } from './emulator';
 
 export class Config {
   id: number = 0;
   title: string = "";
   machines: Array<Machine> = [];
-  emulatorResult: GlobalEmulatorResult;
 
   clone() : Config {
     var r = new Config();
@@ -17,7 +15,6 @@ export class Config {
   copyFrom(other: Config) {
     this.title = other.title;
     this.machines = other.machines.map(m => m.clone());
-    this.emulatorResult = null;
   }
   static fromJson(data: any) : Config {
     var r = new Config();
@@ -45,10 +42,6 @@ export class Config {
     }
   }
 
-  runEmulator() {
-    this.autoAddSourcesAndSinks();
-    this.emulatorResult = runEmulator(this.machines);
-  }
 
   autoAddSourcesAndSinks() {
     this.machines = this.machines.filter(m => !m.isAutoAdded);
@@ -87,13 +80,4 @@ export class Config {
       }
     }
   }
-
-  get jsonContent() : string {
-    return JSON.stringify(this.toJson());
-  }
-  set jsonContent(v: string) {
-    this.setFromJson(JSON.parse(v));
-  }
-
-
 }

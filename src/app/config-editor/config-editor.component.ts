@@ -8,6 +8,7 @@ import { Machine } from '../machine';
 import { DropdownListsService } from '../dropdown-lists.service';
 import { GameData } from '../game-data';
 import { DropdownComponent } from '../dropdown/dropdown.component';
+import { runEmulator, GlobalEmulatorResult } from '../emulator';
 
 @Component({
   selector: 'app-config-editor',
@@ -18,10 +19,18 @@ export class ConfigEditorComponent implements OnInit {
   id: number
   config: Config
   showJsonContent: boolean = false;
+  emulatorResult: GlobalEmulatorResult;
   @ViewChild("addMachineDropdown") addMachineDropdown: DropdownComponent;
 
   toggleJsonContent() {
     this.showJsonContent = !this.showJsonContent;
+  }
+
+  get jsonContent() : string {
+    return JSON.stringify(this.config.toJson());
+  }
+  set jsonContent(v: string) {
+    this.config.setFromJson(JSON.parse(v));
   }
 
   constructor(private route: ActivatedRoute, private configService: ConfigService,
@@ -94,5 +103,10 @@ export class ConfigEditorComponent implements OnInit {
     newConfig.title = `${this.config.title} (copy)`;
     this.configService.addOrUpdateConfig(null, newConfig);
     alert("Copy saved.");
+  }
+
+  runEmulator() {
+    this.config.autoAddSourcesAndSinks();
+    this.emulatorResult = runEmulator(this.config.machines);
   }
 }
