@@ -19,22 +19,26 @@ import { ActiveMachine } from '../machine-editor/machine-editor.component';
 export class ConfigEditorComponent implements OnInit {
   id: number
   config: Config
-  showJsonContent: boolean = false;
+  jsonContent: string = "";
+  jsonContentVisible: boolean = false;
   machines: Array<ActiveMachine> = [];
   emulatorResult: GlobalEmulatorResult;
 
   @ViewChild("addMachineDropdown") addMachineDropdown: DropdownComponent;
 
 
-  toggleJsonContent() {
-    this.showJsonContent = !this.showJsonContent;
+  showJsonContent() {
+    this.jsonContentVisible = true;
+    this.jsonContent = JSON.stringify(this.config.toJson());
   }
-
-  get jsonContent() : string {
-    return JSON.stringify(this.config.toJson());
-  }
-  set jsonContent(v: string) {
-    this.config.setFromJson(JSON.parse(v));
+  applyJsonContent() {
+    try {
+      this.config = Config.fromJson(JSON.parse(this.jsonContent));
+      this.initConfig();
+      this.jsonContentVisible = false;
+    } catch(e) {
+      alert(e);
+    }
   }
 
   constructor(private route: ActivatedRoute, private configService: ConfigService,
@@ -59,9 +63,11 @@ export class ConfigEditorComponent implements OnInit {
       }
       this.config = config.clone();
     }
+    this.initConfig();
+  }
+
+  initConfig() {
     this.machines = this.config.machines.map(m => new ActiveMachine(m));
-
-
   }
 
   deleteConfig() {

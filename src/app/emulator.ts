@@ -181,7 +181,7 @@ export function runEmulator(machines: Array<ActiveMachine>) : GlobalEmulatorResu
         (total_cycles - starting_cycle);
     }
     for(let item in modules[i].machine.maxInput) {
-      result.input[item] = result.load, modules[i].machine.maxInput[item];
+      result.input[item] = result.load * modules[i].machine.maxInput[item];
     }
     for(let item in modules[i].machine.maxOutput) {
       result.output[item] = result.load * modules[i].machine.maxOutput[item];
@@ -189,7 +189,7 @@ export function runEmulator(machines: Array<ActiveMachine>) : GlobalEmulatorResu
     if (modules[i].machine.machine.type !== "matter-source" &&
         modules[i].machine.machine.type !== "matter-sink")
     {
-      let realCount = Math.ceil(modules[i].machine.machine.count * result.load - 0.01);
+      let realCount = Math.ceil(modules[i].machine.machine.count * result.load);
       if (realCount < modules[i].machine.machine.count) {
         result.recommendedCount = realCount;
       }

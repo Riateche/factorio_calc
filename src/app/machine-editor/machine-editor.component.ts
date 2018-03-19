@@ -93,7 +93,6 @@ export class MachineEditorComponent implements OnInit {
     this.updateMaxIO();
   }
   updateMaxIO() {
-    console.log("updateMaxIO");
     this.errorString = "";
     try {
       let r = this.gameData.updateMaxIO(this.machine.machine, this.configService.settings());
@@ -177,7 +176,6 @@ export class MachineEditorComponent implements OnInit {
   }
 
   fixModules() {
-    // console.log(this.machine);
     let targetCount = this.machine.machine.moduleSlots();
     while(this.machine.machine.modules.length < targetCount) {
       this.machine.machine.modules.push("");

@@ -29,19 +29,12 @@
         <button class="button" (click)="saveCopy()">Save copy</button>
       </p>
       <p class="control">
-        <button class="button" (click)="toggleJsonContent()">Import / Export</button>
+        <button class="button" (click)="showJsonContent()">Import / Export</button>
       </p>
       <p class="control" *ngIf="id !== null">
         <button class="button is-danger is-outlined" (click)="deleteConfig()">Delete config</button>
       </p>
     </div>
-
-
-
-    <textarea class="textarea" *ngIf="showJsonContent" [(ngModel)]="config.jsonContent"></textarea>
-
-
-
 
     <div class="columns tableHeader">
       <div class="column sortableHandleColumn"></div>
@@ -67,11 +60,29 @@
     </div>
   </div>
   <div class="underFixedPageHeader">
-    <div *ngIf="machines.length === 0" class="columns">
-        <div class="column sortableHandleColumn"></div>
-        <div class="column configColumn">
-          No machines added yet.
+    <div class="importExportContainer" *ngIf="jsonContentVisible">
+      <div class="field">
+        <div class="label">
+            Copy the data to save it elsewhere or paste new data and apply the changes:
         </div>
+        </div>
+      <div class="field">
+        <textarea class="textarea" [(ngModel)]="jsonContent"></textarea>
+      </div>
+      <div class="field is-grouped">
+        <p class="control">
+          <button class="button is-primary" (click)="applyJsonContent()">Apply</button>
+        </p>
+        <p class="control">
+          <button class="button" (click)="jsonContentVisible = false">Cancel</button>
+        </p>
+      </div>
+    </div>
+    <div *ngIf="machines.length === 0" class="columns">
+      <div class="column sortableHandleColumn"></div>
+      <div class="column configColumn">
+        No machines added yet.
+      </div>
     </div>
     <div [sortablejs]="machines">
       <div *ngFor="let machine of machines" class="machineContainer">
