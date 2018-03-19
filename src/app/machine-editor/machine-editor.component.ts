@@ -93,6 +93,7 @@ export class MachineEditorComponent implements OnInit {
     this.updateMaxIO();
   }
   updateMaxIO() {
+    console.log("updateMaxIO");
     this.errorString = "";
     try {
       let r = this.gameData.updateMaxIO(this.machine.machine, this.configService.settings());

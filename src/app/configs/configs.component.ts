@@ -16,11 +16,6 @@ export class ConfigsComponent implements OnInit {
     this.configs = this.configService.allConfigs();
   }
 
-  addConfig() {
-    var config = this.configService.newConfig();
-    this.router.navigate([this.routes.config(config)]);
-  }
-
   ngOnInit() {
   }
 

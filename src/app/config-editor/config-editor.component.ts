@@ -1,4 +1,4 @@
-import { Component, OnInit, ElementRef, ViewChild } from '@angular/core';
+import { Component, OnInit, ElementRef, ViewChild, ChangeDetectorRef } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ConfigService } from '../config.service';
 import { Config } from '../config';
@@ -39,7 +39,8 @@ export class ConfigEditorComponent implements OnInit {
 
   constructor(private route: ActivatedRoute, private configService: ConfigService,
     private router: Router, private routes: RouteService,
-    private dropdownLists: DropdownListsService)
+    private dropdownLists: DropdownListsService,
+    private changeDetectorRef: ChangeDetectorRef)
   {
   }
 
@@ -115,6 +116,8 @@ export class ConfigEditorComponent implements OnInit {
 
   runEmulator() {
     this.autoAddSourcesAndSinks();
+    // update max io for new machines
+    this.changeDetectorRef.detectChanges();
     this.emulatorResult = runEmulator(this.machines);
   }
 
@@ -123,7 +126,6 @@ export class ConfigEditorComponent implements OnInit {
     this.machines = this.machines.filter(m => !m.machine.isAutoAdded);
     let allInputs = {};
     for(let i = 0; i < this.machines.length; i++) {
-      console.log("ok1", this.machines[i]);
       for(let item in this.machines[i].maxInput) {
         allInputs[item] = allInputs[item] || 0;
         allInputs[item] += this.machines[i].maxInput[item];
